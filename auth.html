@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UzdaRus - Kirish</title>
+    <script>
+        (function redirectLegacyAuth() {
+            const params = new URLSearchParams(window.location.search);
+            const redirect = params.get('redirect');
+            const base = 'my.cabinet/index.html';
+            const target = redirect
+                ? `${base}?redirect=${encodeURIComponent(redirect)}`
+                : base;
+            window.location.replace(target);
+        })();
+    </script>
+    <link rel="icon" href="./images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="./images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { getAllUsers, getUserByEmail, addUser, logActivity } from './firebase-utils.js';
+        
+        // Make functions globally available
+        window.firebaseUtils = {
+            getAllUsers,
+            getUserByEmail,
+            addUser,
+            logActivity
+        };
+        
+        // Signal that Firebase is ready
+        window.firebaseReady = true;
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF9800;
+            --primary-dark: #F57C00;
+            --secondary: #FFD54F;
+            --light: #FFF8E1;
+            --dark: #333;
+            --gray: #666;
+            --success: #4CAF50;
+            --error: #f44336;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Модальное окно */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Контейнер авторизации */
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+            animation: slideIn 0.4s ease;
+            position: relative;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 30px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .auth-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .auth-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .auth-body {
+            padding: 35px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            color: var(--gray);
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.show {
+            display: flex;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #4CAF50;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #f44336;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: #999;
+        }
+        
+        .submit-btn .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Панель пользователя */
+        .user-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: slideIn 0.4s ease;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        .user-panel h2 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .user-panel p {
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .course-item {
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .course-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .course-item h3 {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+
+        .course-item p {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin: 0;
+        }
+
+        .logout-btn {
+            padding: 12px 30px;
+            background: #f44336;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        /* Скрытие форм */
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @media (max-width: 576px) {
+            .auth-container {
+                margin: 10px;
+            }
+
+            .auth-body {
+                padding: 25px;
+            }
+
+            .user-panel {
+                padding: 30px 20px;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Модальное окно авторизации -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <div class="auth-header">
+                <button class="close-btn" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2>UzdaRus</h2>
+                <p>Rus tilini o'rganish platformasi</p>
+            </div>
+
+            <div class="auth-body">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('login')">
+                        <i class="fas fa-sign-in-alt"></i> Kirish
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('register')">
+                        <i class="fas fa-user-plus"></i> Ro'yxatdan o'tish
+                    </button>
+                </div>
+
+                <div class="message" id="message"></div>
+
+                <!-- Форма входа -->
+                <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" name="email" placeholder="email@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Parol</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="loginPassword" name="password" placeholder="••••••••" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-sign-in-alt"></i> Kirish
+                    </button>
+                </form>
+
+                <!-- Форма регистрации -->
+                <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>Ism</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" name="name" placeholder="Ismingiz" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" name="email" placeholder="email@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Parol (kamida 6 ta belgi)</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="registerPassword" name="password" placeholder="••••••••" required
+                                minlength="6">
+                            <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Parolni tasdiqlash</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••"
+                                required minlength="6">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-user-plus"></i> Ro'yxatdan o'tish
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Панель пользователя (после авторизации) -->
+    <div class="user-panel" id="userPanel" style="display: none;">
+        <div class="user-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <h2 id="userName">Foydalanuvchi</h2>
+        <p id="userEmail">email@example.com</p>
+
+        <h3 style="margin-bottom: 20px; color: var(--primary-dark);">Mavjud kurslar</h3>
+        <div class="courses-grid">
+            <div class="course-item" onclick="window.location.href='a1-demo.html'">
+                <h3>A1</h3>
+                <p>Boshlang'ich</p>
+            </div>
+            <div class="course-item" onclick="window.location.href='a2-course.html'">
+                <h3>A2</h3>
+                <p>Asosiy</p>
+            </div>
+            <div class="course-item" onclick="window.location.href='b1-course.html'">
+                <h3>B1</h3>
+                <p>O'rta</p>
+            </div>
+            <div class="course-item" onclick="window.location.href='b2-course.html'">
+                <h3>B2</h3>
+                <p>O'rta yuqori</p>
+            </div>
+            <div class="course-item" onclick="window.location.href='c1-course.html'">
+                <h3>C1</h3>
+                <p>Yuqori</p>
+            </div>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Chiqish
+        </button>
+    </div>
+
+    <script>
+        // Wait for Firebase to load
+        window.addEventListener('load', async function() {
+            // Wait for Firebase module to load
+            if (!window.firebaseReady) {
+                await new Promise(resolve => {
+                    window.addEventListener('firebaseReady', resolve, { once: true });
+                });
+            }
+            await checkAuth();
+        });
+
+        // Activity Logging Function - FIREBASE VERSION
+        async function logActivity(userEmail, action, type = 'general') {
+            try {
+                await window.firebaseUtils.logActivity(userEmail, action, type);
+            } catch (error) {
+                console.error('❌ Error logging activity:', error);
+            }
+        }
+
+        // Проверка авторизации при загрузке страницы
+        async function checkAuth() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (currentUser) {
+                showUserPanel(currentUser);
+            } else {
+                document.getElementById('authModal').classList.add('active');
+            }
+        }
+
+        // Переключение между вкладками
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const forms = document.querySelectorAll('.auth-form');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            forms.forEach(f => f.classList.remove('active'));
+
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+
+            hideMessage();
+        }
+
+        // Показать/скрыть пароль
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = event.target.closest('.password-toggle').querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Показать сообщение
+        function showMessage(type, text) {
+            const messageEl = document.getElementById('message');
+            messageEl.className = `message ${type} show`;
+            messageEl.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${text}
+            `;
+        }
+
+        // Скрыть сообщение
+        function hideMessage() {
+            document.getElementById('message').classList.remove('show');
+        }
+
+        // Закрыть модальное окно
+        function closeModal() {
+            // Redirect to home page if closing without login
+            window.location.href = 'index.html';
+        }
+
+        // Обработка входа - FIREBASE VERSION
+        async function handleLogin(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+            
+            // Disable button and show loading
+            const submitBtn = e.target.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Yuklanmoqda... <span class="spinner"></span>';
+
+            try {
+                // Get all users from Firestore
+                const users = await window.firebaseUtils.getAllUsers();
+                const user = users.find(u => u.email === email && u.password === password);
+
+                if (user) {
+                    // Очищаем прогресс предыдущего пользователя
+                    Object.keys(localStorage).forEach(key => {
+                        if (key !== 'currentUser') {
+                            localStorage.removeItem(key);
+                        }
+                    });
+                    
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    await logActivity(email, `${user.name} tizimga kirdi`, 'login');
+                    showMessage('success', 'Muvaffaqiyatli kirdingiz!');
+
+                    setTimeout(() => {
+                        closeModal();
+
+                        // Check for redirect url
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirectUrl = urlParams.get('redirect');
+
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl;
+                        } else {
+                            showUserPanel(user);
+                        }
+                    }, 1500);
+                } else {
+                    await logActivity(email, `Muvaffaqiyatsiz kirish urinishi: ${email}`, 'login_failed');
+                    showMessage('error', 'Email yoki parol noto\'g\'ri!');
+                    
+                    // Restore button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            } catch (error) {
+                console.error('❌ Login error:', error);
+                showMessage('error', 'Xatolik yuz berdi. Qaytadan urinib ko\'ring.');
+                
+                // Restore button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+
+        // Обработка регистрации - FIREBASE VERSION
+        async function handleRegister(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirmPassword');
+
+            if (password !== confirmPassword) {
+                showMessage('error', 'Parollar mos kelmaydi!');
+                return;
+            }
+            
+            // Disable button and show loading
+            const submitBtn = e.target.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Yuklanmoqda... <span class="spinner"></span>';
+
+            try {
+                // Check if email exists
+                const existingUser = await window.firebaseUtils.getUserByEmail(email);
+
+                if (existingUser) {
+                    showMessage('error', 'Bu email allaqachon ro\'yxatdan o\'tgan!');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    return;
+                }
+
+                // Create new user
+                const userId = await window.firebaseUtils.addUser({
+                    name: name,
+                    email: email,
+                    password: password,
+                    role: 'user'
+                });
+                
+                const userWithId = {
+                    id: userId,
+                    name: name,
+                    email: email,
+                    password: password,
+                    role: 'user',
+                    registeredAt: new Date().toISOString()
+                };
+
+                // Очищаем весь localStorage перед сохранением нового пользователя
+                Object.keys(localStorage).forEach(key => {
+                    localStorage.removeItem(key);
+                });
+
+                localStorage.setItem('currentUser', JSON.stringify(userWithId));
+                await logActivity(email, `${name} ro'yxatdan o'tdi`, 'register');
+
+                showMessage('success', 'Muvaffaqiyatli ro\'yxatdan o\'tdingiz!');
+
+                setTimeout(() => {
+                    closeModal();
+
+                    // Check for redirect url
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirectUrl = urlParams.get('redirect');
+
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    } else {
+                        showUserPanel(userWithId);
+                    }
+                }, 1500);
+            } catch (error) {
+                console.error('❌ Registration error:', error);
+                showMessage('error', 'Xatolik yuz berdi. Qaytadan urinib ko\'ring.');
+                
+                // Restore button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+
+        // Показать панель пользователя
+        function showUserPanel(user) {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('userPanel').style.display = 'block';
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+        }
+
+        // Выход - FIREBASE VERSION
+        async function logout() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                await logActivity(currentUser.email, `${currentUser.name} tizimdan chiqdi`, 'logout');
+            }
+            
+            // Очищаем весь localStorage (прогресс курсов, словарь, тесты)
+            Object.keys(localStorage).forEach(key => {
+                localStorage.removeItem(key);
+            });
+            
+            document.getElementById('userPanel').style.display = 'none';
+            document.getElementById('authModal').classList.add('active');
+            document.getElementById('authModal').style.display = 'flex';
+
+            // Очистка форм
+            document.getElementById('loginForm').reset();
+            document.getElementById('registerForm').reset();
+            switchTab('login');
+        }
+    </script>
+</body>
+
+</html>

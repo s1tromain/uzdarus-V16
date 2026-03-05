@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UzdaRus Ta'lim Platformasi</title>
+    <link rel="icon" href="./images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="./images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF9800;
+            --primary-dark: #F57C00;
+            --secondary: #FFD54F;
+            --light: #FFF8E1;
+            --dark: #333;
+            --gray: #666;
+            --light-gray: #f5f5f5;
+            --text-color: #88a0c5;
+            --button-color: #374f73;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .navbar-logo {
+            height: 25px;
+            width: auto;
+            margin-right: 5px;
+            margin-bottom: 2px;
+            /* чтобы лого было на одной линии с текстом */
+        }
+
+        .logo span {
+            color: var(--light);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-login-btn {
+            background-color: white;
+            color: var(--primary-dark) !important;
+            border-radius: 20px !important;
+            padding: 8px 20px !important;
+            font-weight: bold !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-login-btn:hover {
+            background-color: var(--light) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* User Avatar in Navbar */
+        .user-avatar-nav {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .user-avatar-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        /* Адаптив для мобильных - центрирование dropdown */
+        @media (max-width: 768px) {
+            .user-dropdown {
+                right: auto;
+                left: 50%;
+                transform: translateX(-50%) translateY(-10px);
+                top: 55px;
+                min-width: 250px;
+            }
+            
+            .user-dropdown.active {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .user-dropdown-header {
+            padding: 15px;
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+            text-align: center;
+        }
+
+        .user-dropdown-header h4 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .user-dropdown-header p {
+            margin: 5px 0 0 0;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .user-dropdown-menu {
+            padding: 10px 0;
+        }
+
+        .user-dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            color: #333 !important;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .user-dropdown-menu a:hover {
+            background: #f5f5f5;
+        }
+
+        .user-dropdown-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-login-item {
+                margin-top: 10px;
+            }
+        }
+
+        .burger {
+            display: none;
+            cursor: pointer;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Animated Hero Section with Logo Particles */
+        .hero {
+            position: relative;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            animation: float 6s ease-in-out infinite;
+            width: 100%;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            animation: fadeInUp 1s ease-out;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary-dark);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo Particles Container */
+        .logo-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .logo-particle {
+            position: absolute;
+            background-image: url('./images/logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 8px;
+            animation: floatParticle 20s infinite linear;
+            opacity: 0.08;
+            filter: brightness(1.2) contrast(1.1);
+            transform-origin: center;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.12;
+            }
+
+            50% {
+                opacity: 0.1;
+            }
+
+            90% {
+                opacity: 0.12;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        /* Courses Section */
+        .courses {
+            background-color: white;
+            position: relative;
+        }
+
+        .courses-carousel {
+            position: relative;
+            width: 100%;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 0 60px;
+        }
+
+        .carousel-container {
+            overflow: hidden;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            gap: 30px;
+            padding: 10px 0;
+        }
+
+        /* Карточки курсов с БЕЛЫМ фоном - ОБНОВЛЕННЫЙ РАЗМЕР */
+        .course-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 20px;
+            box-shadow: 0 10px 30px rgba(136, 160, 197, 0.2),
+                0 5px 15px rgba(136, 160, 197, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex: 0 0 calc(33.333% - 20px);
+            min-width: 280px;
+            max-width: 350px;
+            scroll-snap-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 460px;
+            border: 2px solid #88a0c5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(136, 160, 197, 0.3),
+                0 10px 20px rgba(136, 160, 197, 0.2);
+            border-color: #6d8ab5;
+        }
+
+        .course-card h3 {
+            color: #88a0c5;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            line-height: 1.3;
+        }
+
+        .course-card>p {
+            color: #88a0c5;
+            margin-bottom: 20px;
+            min-height: 50px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .course-card ul {
+            list-style: none;
+            margin: 15px 0;
+            flex-grow: 1;
+        }
+
+        .course-card ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(136, 160, 197, 0.3);
+            display: flex;
+            align-items: center;
+            color: #88a0c5;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .course-card ul li:hover {
+            color: #374f73;
+            transform: translateX(5px);
+        }
+
+        .course-card ul li:before {
+            content: "✓";
+            color: #88a0c5;
+            font-weight: bold;
+            display: inline-block;
+            width: 1.2em;
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+
+        .course-link-container {
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        /* КНОПКИ КУРСОВ с цветом #374f73 */
+        .course-link {
+            display: inline-block;
+            background: #374f73;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            border: none;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 6px 20px rgba(55, 79, 115, 0.3);
+        }
+
+        .course-link:hover {
+            background: #2b3d5c;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(55, 79, 115, 0.4);
+        }
+
+        .course-link:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 15px rgba(55, 79, 115, 0.3);
+        }
+
+        /* КНОПКИ КАРУСЕЛИ с цветом #374f73 */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #374f73;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(55, 79, 115, 0.3);
+        }
+
+        .carousel-btn:hover:not(:disabled) {
+            background: #2b3d5c;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 15px rgba(55, 79, 115, 0.4);
+        }
+
+        .carousel-btn:active:not(:disabled) {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .carousel-btn.prev {
+            left: 0;
+        }
+
+        .carousel-btn.next {
+            right: 0;
+        }
+
+        .carousel-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: var(--gray);
+        }
+
+        .carousel-btn i {
+            pointer-events: none;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #374f73;
+            transform: scale(1.2);
+        }
+
+        /* Other Sections */
+        .about,
+        .pricing,
+        .discounts,
+        .blog,
+        .contact {
+            background-color: white;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .price-card {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .price-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .price {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .new-price {
+            font-weight: 800;
+        }
+
+        .price-features {
+            text-align: left;
+            margin: 20px 0;
+            flex-grow: 1;
+        }
+
+        .price-features p {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-features i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .price-badge {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: #FF9800;
+            color: white;
+            padding: 8px 40px;
+            transform: rotate(45deg);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 50px 0 20px;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FFD54F, #FF9800, #F57C00);
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--light);
+            animation: widthPulse 2s infinite;
+        }
+
+        @keyframes widthPulse {
+
+            0%,
+            100% {
+                width: 50px;
+            }
+
+            50% {
+                width: 70px;
+            }
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .contact-info {
+            list-style: none;
+        }
+
+        .contact-info li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: white;
+            color: var(--primary-dark);
+            transform: translateY(-3px) rotate(10deg);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .course-card {
+                flex: 0 0 calc(33.333% - 20px);
+                min-width: 260px;
+                max-width: 320px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .course-card {
+                flex: 0 0 calc(50% - 15px);
+                min-height: 460px;
+                min-width: 240px;
+                max-width: 320px;
+            }
+
+            .carousel-wrapper {
+                padding: 0 50px;
+            }
+
+            .carousel-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .burger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                flex-direction: column;
+                align-items: center;
+                padding-top: 30px;
+                transition: all 0.5s ease;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .carousel-wrapper {
+                padding: 0 30px;
+            }
+
+            .course-card {
+                flex: 0 0 calc(100% - 40px);
+                min-height: 440px;
+                margin: 0 auto;
+                min-width: 280px;
+                max-width: 400px;
+                padding: 20px 15px;
+            }
+
+            .course-card h3 {
+                height: auto;
+                min-height: 40px;
+                font-size: 1.3rem;
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section h3:after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .carousel-wrapper {
+                padding: 0 20px;
+            }
+
+            .carousel-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .course-card {
+                padding: 18px 15px;
+                min-height: 420px;
+                min-width: 250px;
+                max-width: 350px;
+            }
+
+            .course-card h3 {
+                font-size: 1.2rem;
+            }
+
+            .course-card>p {
+                font-size: 0.95rem;
+            }
+
+            .course-card ul li {
+                font-size: 0.9rem;
+            }
+
+            .hero {
+                padding: 60px 0;
+                min-height: 80vh;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .carousel-wrapper {
+                padding: 0 15px;
+            }
+
+            .course-card {
+                min-height: 410px;
+                padding: 15px 12px;
+                min-width: 220px;
+                max-width: 320px;
+            }
+
+            .course-card h3 {
+                font-size: 1.1rem;
+            }
+
+            .carousel-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .carousel-wrapper {
+                padding: 0 12px;
+            }
+
+            .carousel-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+
+            .course-card {
+                min-height: 400px;
+                padding: 15px 10px;
+                min-width: 200px;
+                max-width: 300px;
+            }
+
+            .course-card h3 {
+                font-size: 1.1rem;
+                line-height: 1.2;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .carousel-wrapper {
+                padding: 0 10px;
+            }
+
+            .carousel-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+
+            .course-card {
+                min-width: 180px;
+                min-height: 380px;
+                padding: 12px 8px;
+            }
+
+            .course-card h3 {
+                font-size: 1rem;
+            }
+        }
+
+        /* Disable hover on mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .carousel-btn:hover:not(:disabled) {
+                transform: translateY(-50%);
+                background: #374f73;
+            }
+
+            .course-card:hover {
+                transform: none;
+            }
+
+            .btn:hover,
+            .course-link:hover {
+                transform: none;
+            }
+        }
+
+        /* Center carousel items */
+        .carousel-track {
+            align-items: stretch;
+        }
+
+        /* Mobile center alignment */
+        @media (max-width: 768px) {
+            .carousel-track {
+                justify-content: flex-start;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .course-card {
+                flex: 0 0 calc(100% - 20px);
+                margin: 0 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+
+            <a href="#" class="logo">
+                <span style="color: white;">Uzda</span>
+                <span style="color: #08617f;">Rus</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Bosh sahifa</a></li>
+                <li><a href="#about">Biz haqimizda</a></li>
+                <li><a href="#courses">Darslar</a></li>
+                <li><a href="#pricing">Tariflar</a></li>
+                <li><a href="#discounts">Kuratorlar</a></li>
+                <li><a href="#blog">Natijalar</a></li>
+                <li><a href="#contact">Qayta aloqa</a></li>
+                <li class="nav-login-item" id="navLoginItem">
+                    <a href="my.cabinet/index.html" class="nav-login-btn" id="navLoginBtn">
+                        <i class="fas fa-user-circle"></i> Kirish
+                    </a>
+                    <!-- User Avatar (Hidden by default) -->
+                    <div class="user-avatar-nav" id="userAvatarNav" style="display: none;" onclick="toggleUserDropdown()">
+                        <i class="fas fa-user"></i>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="user-dropdown-header">
+                                <h4 id="navUserName">Foydalanuvchi</h4>
+                                <p id="navUserEmail">email@example.com</p>
+                            </div>
+                            <div class="user-dropdown-menu">
+                                <a href="my.cabinet/dashboard.html"><i class="fas fa-book-open"></i> Mening kurslarim</a>
+                                <a href="#" onclick="navLogout(event)"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="burger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Logo Particles -->
+    <section class="hero" id="home">
+        <!-- Logo Particles Background -->
+        <div class="logo-particles" id="logoParticles"></div>
+
+        <div class="container">
+            <div class="hero-content">
+                <h1>UzdaRus bilan rus tilini oson va qiziqarli o'rganing!</h1>
+                <p>Barcha darajalardagi rus tilini o'rganish uchun professional ta'lim platformasi.</p>
+                <a href="#courses" class="btn">O'qishni boshlang</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+
+        <div class="container">
+            <h2 class="section-title">Biz haqimizda</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto; font-size: 1.1rem;">
+                UzdaRus Education Platform - bu tilshunoslik va ta'lim sohasidagi mutaxassislari tomonidan yaratilgan
+                zamonaviy rus tilini o'rganish platformasidir. Biz boshlang'ichdan tortib ilg'or darajagacha tuzilgan
+                kurslarni, interaktiv vazifalarni va shaxsiylashtirilgan yondashuvni taklif qilamiz.
+            </p>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section class="courses" id="courses">
+        <div class="container">
+            <h2 class="section-title">Darslar</h2>
+            <div class="courses-carousel">
+                <div class="carousel-wrapper">
+                    <button class="carousel-btn prev" aria-label="Oldingi kurslar">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <div class="carousel-container">
+                        <div class="carousel-track">
+                            <!-- All courses in one row -->
+
+
+                            <div class="course-card">
+                                <h3>A1 daraja - "BOSHLANG'ICH"</h3>
+                                <p>Absolyut boshlang'ichlar uchun ajoyib. Siz rus tilining asoslarini o'rganasiz.</p>
+                                <ul>
+                                    <li>Salomlashish va xayrlashish</li>
+                                    <li>1 dan 100 gacha sonlar</li>
+                                    <li>Oila va qarindoshlar</li>
+                                    <li>Osnovniy ranglar</li>
+                                    <li>Ob-havo va fasllar</li>
+                                </ul>
+                                <div class="course-link-container">
+                                    <a href="#" onclick="handleCourseClick(event, 'a1-demo.html')"
+                                        class="course-link">A1
+                                        kursiga o'tish</a>
+                                </div>
+                            </div>
+                            <div class="course-card">
+                                <h3>A2 daraja - <br>"ASOSIY"</h3>
+                                <p>Kundalik vaziyatlarda asosiy muloqot ko'nikmalarini rivojlantiring.</p>
+                                <ul>
+                                    <li>Do'konda xarid qilish</li>
+                                    <li>Restoranda buyurtma berish</li>
+                                    <li>Jamoa transporti</li>
+                                    <li>Ish va kasblar</li>
+                                    <li>Hobbiy va qiziqishlar</li>
+                                </ul>
+                                <div class="course-link-container">
+                                    <a href="#" onclick="handleCourseClick(event, 'a2-demo.html')"
+                                        class="course-link">A2 kursiga o'tish</a>
+                                </div>
+                            </div>
+                            <div class="course-card">
+                                <h3>B1 daraja - <br> "O'RTA-YUQORI"</h3>
+                                <p>Turli mavzularda erkin muloqot qiling va o'z fikrlaringizni ifodalang.</p>
+                                <ul>
+                                    <li>Hayot tajribasi va voqealar</li>
+                                    <li>Bolalik xotiralari</li>
+                                    <li>Ta'lim va rivojlanish</li>
+                                    <li>Ish va martaba</li>
+                                    <li>Madaniyat va an'analar</li>
+                                </ul>
+                                <div class="course-link-container">
+                                    <a href="#" onclick="handleCourseClick(event, 'b1-demo.html?v=2')"
+                                        class="course-link">B1 kursiga o'tish</a>
+                                </div>
+                            </div>
+                            <div class="course-card">
+                                <h3>B2 daraja - <br> "O'RTA YUQORI"</h3>
+                                <p>Murakkab mavzularda erkin fikr bildirish va bahs-munozaralar.</p>
+                                <ul>
+                                    <li>Shaxsiy qarashlar va pozitsiya</li>
+                                    <li>Professional muhit</li>
+                                    <li>Jamiyat muammolari</li>
+                                    <li>Texnologiya va inson</li>
+                                    <li>Bahs va ommaviy nutq</li>
+                                </ul>
+                                <div class="course-link-container">
+                                    <a href="#" onclick="handleCourseClick(event, 'b2-demo.html')"
+                                        class="course-link">B2 kursiga o'tish</a>
+                                </div>
+                            </div>
+                            <div class="course-card">
+                                <h3>C1 daraja - <br> "YUQORI"</h3>
+                                <p>Kasbiy darajada tilni erkin egallash.</p>
+                                <ul>
+                                    <li>Adabiyot tahlili</li>
+                                    <li>Tilshunoslik va filologiya</li>
+                                    <li>San'at va arxitektura</li>
+                                    <li>Yurisprudensiya</li>
+                                    <li>Akademik yozish</li>
+                                </ul>
+                                <div class="course-link-container">
+                                    <p style="text-align: center; font-size: 1.2rem; font-weight: 700; color: #374f73; padding: 12px 30px; margin: 0;">
+                                        Tez kunda
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="carousel-btn next" aria-label="Keyingi kurslar">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="carousel-dots">
+                    <div class="dot active" data-index="0"></div>
+                    <div class="dot" data-index="1"></div>
+                    <div class="dot" data-index="2"></div>
+                    <div class="dot" data-index="3"></div>
+                    <div class="dot" data-index="4"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section - ОБНОВЛЕННЫЕ ТАРИФЫ -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Tariflar</h2>
+            <div class="pricing-grid">
+                <!-- TURBO Tarif (бывший START) -->
+                <div class="price-card" style="border: 3px solid #E5E4E2;">
+                    <div class="price-badge" style="background: #9E9E9E;">3 OYLIK</div>
+                    <h3 style="background: linear-gradient(135deg, #E5E4E2, #C0C0C0); color: #333;">START</h3>
+                    <div class="price">
+                        <span class="old-price">1 130 000 so'm/oy</span>
+                        <span class="new-price" style="color: #757575;">760 000 so'm</span>
+                    </div>
+                    <div class="price-features">
+                        <p><i class="fas fa-check" style="color: #757575;"></i> A1-A2 kurslari (boshlang'ich)</p>
+                        <p><i class="fas fa-check" style="color: #757575;"></i> B1-B2 kurslari (o'rta)</p>
+                        <p><i class="fas fa-times" style="color: #FF5252;"></i> <span
+                                style="color: #999; text-decoration: line-through;">C1 kursi (yuqori)</span></p>
+                        <p><i class="fas fa-check" style="color: #757575;"></i> Interaktiv mashqlar</p>
+                        <p><i class="fas fa-check" style="color: #757575;"></i> Kursni tugatish sertifikati</p>
+                        <p><i class="fas fa-check" style="color: #757575;"></i> Testlar</p>
+                        <p><i class="fas fa-check" style="color: #757575;"></i> Audio materiallar</p>
+                    </div>
+                    <a href="./tolov.html" class="btn"
+                        style="background: linear-gradient(135deg, #E5E4E2, #C0C0C0); color: #333; margin-top: auto;">Tanlash</a>
+                </div>
+
+                <!-- START Tarif (бывший GOLD) -->
+                <div class="price-card" style="border: 3px solid #4CAF50;">
+                    <div class="price-badge" style="background: #388E3C;">6 OYLIK</div>
+                    <h3 style="background: linear-gradient(135deg, #4CAF50, #388E3C); color: white;">TURBO</h3>
+                    <div class="price">
+                        <span class="old-price">1 620 000 so'm/oy</span>
+                        <span class="new-price" style="color: #4CAF50;">980 000 so'm</span>
+                    </div>
+                    <div class="price-features">
+                        <p><i class="fas fa-check" style="color: #4CAF50;"></i> A1-A2 kurslari (boshlang'ich)</p>
+                        <p><i class="fas fa-check" style="color: #4CAF50;"></i> B1-B2 kurslari (o'rta)</p>
+                        <p><i class="fas fa-times" style="color: #FF5252;"></i> <span
+                                style="color: #999; text-decoration: line-through;">C1 kursi (yuqori)</span></p>
+                        <p><i class="fas fa-check" style="color: #4CAF50;"></i> Kursni tugatish sertifikati</p>
+                        <p><i class="fas fa-check" style="color: #4CAF50;"></i> Premium qo'llanmalar</p>
+                        <p><i class="fas fa-check" style="color: #4CAF50;"></i> Shaxsiy progress monitoring</p>
+                        <p><i class="fas fa-check" style="color: #4CAF50;"></i> Qo'shimcha vazifalar to'plami</p>
+                        <p><i class="fas fa-check" style="color: #4CAF50;"></i> Oylik konsultatsiya</p>
+                    </div>
+                    <a href="./tolov.html" class="btn"
+                        style="background: linear-gradient(135deg, #4CAF50, #388E3C); color: white; margin-top: auto;">Tanlash</a>
+                </div>
+
+                <!-- GOLD Tarif (бывший PLATINUM) -->
+                <div class="price-card" style="border: 3px solid #FFD700;">
+                    <div class="price-badge" style="background: #FF9800;">3 OYLIK</div>
+                    <h3 style="background: linear-gradient(135deg, #FFD700, #FFA500); color: #333;">PREMIUM</h3>
+                    <div class="price">
+                        <span class="old-price">2 350 000 so'm/oy</span>
+                        <span class="new-price" style="color: #FFD700;">1 640 000 so'm</span>
+                    </div>
+                    <div class="price-features">
+                        <p><i class="fas fa-times" style="color: #FF5252;"></i> <span
+                                style="color: #999; text-decoration: line-through;">A1-A2 kurslari (boshlang'ich)</span>
+                        </p>
+                        <p><i class="fas fa-times" style="color: #FF5252;"></i> <span
+                                style="color: #999; text-decoration: line-through;">B1-B2 kurslari (o'rta)</span></p>
+                        <p><i class="fas fa-check" style="color: #FFD700;"></i> C1 kursi (yuqori)</p>
+                        <p><i class="fas fa-check" style="color: #FFD700;"></i> Kursni tugatish sertifikati</p>
+                        <p><i class="fas fa-check" style="color: #FFD700;"></i> Ekskluziv materiallar</p>
+                        <p><i class="fas fa-check" style="color: #FFD700;"></i> Shaxsiy kurator</p>
+                        <p><i class="fas fa-check" style="color: #FFD700;"></i> 24/7 yordam va konsultatsiya</p>
+                        <p><i class="fas fa-check" style="color: #FFD700;"></i> Individual o'quv reja</p>
+                        <p><i class="fas fa-check" style="color: #FFD700;"></i> Yakka tartibdagi mashg'ulotlar</p>
+                    </div>
+                    <a href="./tolov.html" class="btn"
+                        style="background: linear-gradient(135deg, #FFD700, #FFA500); color: #333; margin-top: auto;">Tanlash</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Discounts Section -->
+    <section class="discounts" id="discounts">
+        <div class="container">
+            <h2 class="section-title">Kuratorlar</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto; font-size: 1.1rem;">
+                Coming soon...
+            </p>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="blog" id="blog">
+        <div class="container">
+            <h2 class="section-title">Natijalar</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto; font-size: 1.1rem;">
+                Coming soon...
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Qayta aloqa</h2>
+            <div class="contact-form">
+                <div class="form-group">
+                    <input type="text" placeholder="Ismingiz" id="name">
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Email manzilingiz" id="email">
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Xabaringiz" id="message"></textarea>
+                </div>
+                <button class="btn"
+                    style="width: 100%; background: linear-gradient(135deg, var(--primary), var(--white)); border: none; margin-top: 10px;"
+                    id="contactSubmit">Yuborish</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h3>UzdaRus</h3>
+                    <p style="color: rgba(255,255,255,0.8); line-height: 1.6;">
+                        Rus tilini o'rganishning eng samarali platformasi.
+                        Barcha darajalar uchun professional kurslar.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Kurslar</h3>
+                    <ul class="footer-links">
+                        <li><a href="a1-course.html"><i class="fas fa-chevron-right"></i> A1 - "BOSHLANG'ICH"</a></li>
+                        <li><a href="a2-course.html"><i class="fas fa-chevron-right"></i> A2 - "ASOSIY"</a></li>
+                        <li><a href="b1-course.html"><i class="fas fa-chevron-right"></i> B1 - "O'RTA"</a></li>
+                        <li><a href="b2-course.html"><i class="fas fa-chevron-right"></i> B2 - "O'RTA YUQORI"</a></li>
+                        <li><a href="c1-course.html"><i class="fas fa-chevron-right"></i> C1 - "YUQORI"</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Foydali havolalar</h3>
+                    <ul class="footer-links">
+                        <li><a href="#about"><i class="fas fa-chevron-right"></i> Biz haqimizda</a></li>
+                        <li><a href="#pricing"><i class="fas fa-chevron-right"></i>Tariflar</a></li>
+                        <li><a href="#discounts"><i class="fas fa-chevron-right"></i>Kuratorlar</a></li>
+                        <li><a href="#blog"><i class="fas fa-chevron-right"></i>Natijalar</a></li>
+                        <li><a href="#contact"><i class="fas fa-chevron-right"></i>Qayta Aloqa</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Biz bilan aloqa</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Toshkent, O'zbekiston</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+998 (90) 123-45-67</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@ruschasiga.uz</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Du-Sha: 9:00 - 18:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2025 Barcha huquqlar himoyalangan. Rus tilini oson va samarali o'rganing!</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation burger menu
+        const burger = document.querySelector('.burger');
+        const navLinks = document.querySelector('.nav-links');
+
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                navLinks.classList.remove('active');
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // БЕЗОПАСНАЯ отправка сообщения через API (токены на сервере!)
+        async function sendToTelegram(name, email, message) {
+            try {
+                const response = await fetch('http://localhost:3000/api/send-contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email, message })
+                });
+
+                const result = await response.json();
+                return result.success;
+            } catch (error) {
+                console.error('API error:', error);
+                return false;
+            }
+        }
+
+        // Обновленный обработчик формы
+        document.getElementById('contactSubmit').addEventListener('click', async function () {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (name && email && message) {
+                // Валидация email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Iltimos, to\'g\'ri email manzilini kiriting.');
+                    return;
+                }
+
+                // Сохраняем оригинальный текст кнопки
+                const originalText = this.innerHTML;
+
+                // Показываем загрузку
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yuborilmoqda...';
+                this.disabled = true;
+
+                try {
+                    // Отправляем в Telegram
+                    const sent = await sendToTelegram(name, email, message);
+
+                    if (sent) {
+                        alert('✅ Xabaringiz muvaffaqiyatli yuborildi! Tez orada siz bilan bog\'lanamiz.');
+
+                        // Очищаем форму
+                        document.getElementById('name').value = '';
+                        document.getElementById('email').value = '';
+                        document.getElementById('message').value = '';
+                    } else {
+                        alert('❌ Xatolik yuz berdi. Iltimos, qaytadan urinib ko\'ring yoki Telegram orqali bog\'laning.');
+                    }
+                } catch (error) {
+                    alert('❌ Xatolik yuz berdi. Internet aloqasini tekshiring.');
+                    console.error('Forma yuborish xatosi:', error);
+                } finally {
+                    // Восстанавливаем кнопку
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                }
+            } else {
+                alert('Iltimos, barcha maydonlarni to\'ldiring.');
+            }
+        });
+
+        // Create animated logo particles for hero section
+        function createLogoParticles() {
+            const particlesContainer = document.getElementById('logoParticles');
+            if (!particlesContainer) return;
+
+            const particleCount = 25;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('logo-particle');
+
+                const size = Math.random() * 40 + 20;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                particle.style.left = `${Math.random() * 100}%`;
+
+                const opacity = 0.05 + Math.random() * 0.1;
+                particle.style.opacity = opacity;
+
+                const duration = Math.random() * 15 + 15;
+                particle.style.animationDuration = `${duration}s`;
+
+                const delay = Math.random() * 5;
+                particle.style.animationDelay = `${delay}s`;
+
+                const rotation = Math.random() * 360;
+                particle.style.transform = `rotate(${rotation}deg)`;
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Carousel functionality
+        const track = document.querySelector('.carousel-track');
+        const slides = Array.from(track.children);
+        const prevButton = document.querySelector('.carousel-btn.prev');
+        const nextButton = document.querySelector('.carousel-btn.next');
+        const dots = document.querySelectorAll('.dot');
+
+        let currentIndex = 0;
+        let cardsPerView = 3;
+        let isAnimating = false;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // Calculate cards per view based on screen width
+        function calculateCardsPerView() {
+            if (window.innerWidth >= 1024) {
+                return 3;
+            } else if (window.innerWidth >= 768) {
+                return 2;
+            } else {
+                return 1;
+            }
+        }
+
+        // Update carousel position
+        function updateCarousel() {
+            if (isAnimating) return;
+
+            isAnimating = true;
+            cardsPerView = calculateCardsPerView();
+
+            const card = slides[0];
+            const cardStyle = window.getComputedStyle(card);
+            const cardWidth = card.offsetWidth +
+                parseInt(cardStyle.marginLeft) +
+                parseInt(cardStyle.marginRight);
+
+            const gap = 30;
+            const moveDistance = (cardWidth + gap) * currentIndex;
+
+            track.style.transform = `translateX(-${moveDistance}px)`;
+
+            // Update dots
+            const totalPages = Math.ceil(slides.length / cardsPerView);
+            const currentPage = Math.floor(currentIndex / cardsPerView);
+
+            dots.forEach((dot, index) => {
+                const isActive = index === currentPage;
+                dot.classList.toggle('active', isActive);
+
+                if (index >= totalPages) {
+                    dot.style.display = 'none';
+                } else {
+                    dot.style.display = 'block';
+                }
+            });
+
+            // Update button states
+            prevButton.disabled = currentIndex === 0;
+            nextButton.disabled = currentIndex >= slides.length - cardsPerView;
+
+            setTimeout(() => {
+                isAnimating = false;
+            }, 500);
+        }
+
+        // Move to next slide
+        function moveToNext() {
+            if (!isAnimating && currentIndex < slides.length - cardsPerView) {
+                currentIndex++;
+                updateCarousel();
+            }
+        }
+
+        // Move to previous slide
+        function moveToPrev() {
+            if (!isAnimating && currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        }
+
+        // Button event listeners
+        nextButton.addEventListener('click', moveToNext);
+        prevButton.addEventListener('click', moveToPrev);
+
+        // Dot event listeners
+        dots.forEach(dot => {
+            dot.addEventListener('click', function () {
+                if (isAnimating) return;
+
+                const index = parseInt(this.getAttribute('data-index'));
+                cardsPerView = calculateCardsPerView();
+                currentIndex = index * cardsPerView;
+                updateCarousel();
+            });
+        });
+
+        // Touch events for mobile
+        track.addEventListener('touchstart', function (e) {
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        track.addEventListener('touchmove', function (e) {
+            touchEndX = e.touches[0].clientX;
+        }, { passive: true });
+
+        track.addEventListener('touchend', function () {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    moveToNext();
+                } else {
+                    moveToPrev();
+                }
+            }
+        }, { passive: true });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowLeft') {
+                moveToPrev();
+            } else if (e.key === 'ArrowRight') {
+                moveToNext();
+            }
+        });
+            
+        // Window resize handler
+        let resizeTimeout;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function () {
+                cardsPerView = calculateCardsPerView();
+                if (cardsPerView === 1 && currentIndex >= slides.length) {
+                    currentIndex = 0;
+                }
+                updateCarousel();
+            }, 150);
+        });
+
+        // Auth Guard for Courses
+        function handleCourseClick(e, url) {
+            e.preventDefault();
+            window.location.href = url;
+        }
+
+        // Auto slide
+        let autoSlideInterval;
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(function () {
+                if (currentIndex < slides.length - cardsPerView) { moveToNext(); } else { currentIndex = 0; updateCarousel(); }
+            },
+                5000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
+
+        // Pause auto slide on interaction
+        const carouselSection = document.querySelector('.courses-carousel');
+        if (carouselSection) {
+            carouselSection.addEventListener('mouseenter', stopAutoSlide);
+            carouselSection.addEventListener('mouseleave', startAutoSlide);
+            carouselSection.addEventListener('touchstart', stopAutoSlide, { passive: true });
+            carouselSection.addEventListener('touchend', function () {
+                setTimeout(startAutoSlide, 3000);
+            }, { passive: true });
+        }
+
+        // Initialize carousel
+        function initCarousel() {
+            cardsPerView = calculateCardsPerView();
+            updateCarousel();
+            startAutoSlide();
+
+            if (cardsPerView === 1) {
+                const container = document.querySelector('.carousel-container');
+                if (container && slides.length > 0) {
+                    const firstCard = slides[0];
+                    const cardWidth = firstCard.offsetWidth;
+                    const containerWidth = container.offsetWidth;
+                    const offset = (containerWidth - cardWidth) / 2;
+                    // Only apply if values are valid numbers
+                    if (!isNaN(offset)) {
+                        track.style.paddingLeft = offset + 'px';
+                        track.style.paddingRight = offset + 'px';
+                    }
+                }
+            }
+        }
+
+        // Initialize everything when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () {
+                createLogoParticles();
+                initCarousel();
+                checkAdminRedirect();
+                checkUserLogin();
+            });
+        } else {
+            createLogoParticles();
+            initCarousel();
+            checkAdminRedirect();
+            checkUserLogin();
+        }
+
+        // Check for admin entry
+        function checkAdminRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('admin')) {
+                window.location.href = 'adminpanel.html';
+            }
+        }
+
+        // Check if user is logged in
+        function checkUserLogin() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (currentUser && currentUser.role !== 'guest' && !currentUser.isDemoGuest) {
+                showUserAvatar(currentUser);
+            }
+        }
+
+        // Show user avatar in navbar
+        function showUserAvatar(user) {
+            const loginBtn = document.getElementById('navLoginBtn');
+            const avatarNav = document.getElementById('userAvatarNav');
+            const displayName = user.displayName || user.name || user.username || 'Foydalanuvchi';
+            const email = user.email || (user.username ? `${user.username}@uzdarus.local` : '');
+            
+            if (loginBtn && avatarNav) {
+                loginBtn.style.display = 'none';
+                avatarNav.style.display = 'flex';
+                
+                // Set user info
+                const userName = document.getElementById('navUserName');
+                const userEmail = document.getElementById('navUserEmail');
+                
+                if (userName) userName.textContent = displayName;
+                if (userEmail) userEmail.textContent = email;
+                
+                // Set avatar initial
+                const firstLetter = displayName[0].toUpperCase();
+                avatarNav.innerHTML = `
+                    ${firstLetter}
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown-header">
+                            <h4>${displayName}</h4>
+                            <p>${email}</p>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <a href="my.cabinet/dashboard.html"><i class="fas fa-book-open"></i> Mening kurslarim</a>
+                            <a href="#" onclick="navLogout(event)"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Toggle user dropdown
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('active');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const avatarNav = document.getElementById('userAvatarNav');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (avatarNav && dropdown && !avatarNav.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Logout from navbar
+        function navLogout(event) {
+            event.preventDefault();
+            
+            localStorage.removeItem('currentUser');
+            
+            // Reset navbar
+            const loginBtn = document.getElementById('navLoginBtn');
+            const avatarNav = document.getElementById('userAvatarNav');
+            
+            if (loginBtn && avatarNav) {
+                loginBtn.style.display = 'flex';
+                avatarNav.style.display = 'none';
+            }
+            
+            window.location.href = 'my.cabinet/index.html?logout=1';
+        }
+    </script>
+</body>
+
+</html>

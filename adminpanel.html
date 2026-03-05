@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UZDARUS | Admin Panel</title>
+    <link rel="icon" href="./images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="./images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./adminpanel.css">
+</head>
+
+<body>
+    <main class="admin-shell">
+        <header class="admin-header">
+            <div>
+                <h1>UZDARUS Admin Panel</h1>
+                <p id="adminMeta">Yuklanmoqda...</p>
+            </div>
+            <div class="header-actions">
+                <a class="btn btn-ghost" href="./index.html">Bosh sahifa</a>
+                <button id="logoutBtn" class="btn btn-danger" type="button">Chiqish</button>
+            </div>
+        </header>
+
+        <div id="globalError" class="notice error"></div>
+        <div id="globalSuccess" class="notice success"></div>
+
+        <section class="stats-grid" id="statsGrid">
+            <article class="stat-card">
+                <span class="stat-label">Jami foydalanuvchi</span>
+                <strong id="statTotalUsers">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Faol obunalar</span>
+                <strong id="statActiveSubs">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Bloklangan akkaunt</span>
+                <strong id="statBlocked">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Ro‘yxatdan o‘tgan qurilmalar</span>
+                <strong id="statDevices">0</strong>
+            </article>
+        </section>
+
+        <nav class="tabs" id="tabsNav">
+            <button class="tab-btn active" data-tab="customers" type="button">Customers</button>
+            <button class="tab-btn" data-tab="admin" id="adminTabBtn" type="button">Administration</button>
+        </nav>
+
+        <section class="tab-panel active" id="tab-customers">
+            <div class="card">
+                <h2>Yangi customer yaratish</h2>
+                <form id="createCustomerForm" class="form-grid">
+                    <label>
+                        Login
+                        <input type="text" name="username" required>
+                    </label>
+                    <label>
+                        Ism
+                        <input type="text" name="displayName" required>
+                    </label>
+                    <label>
+                        Vaqtinchalik parol
+                        <input type="text" name="temporaryPassword" minlength="8" required>
+                    </label>
+                    <label>
+                        Tarif
+                        <select name="tariff">
+                            <option value="START">START</option>
+                            <option value="GOLD">GOLD</option>
+                            <option value="PLATINUM">PLATINUM</option>
+                        </select>
+                    </label>
+                    <label>
+                        Obuna kunlari
+                        <input type="number" name="subscriptionDays" min="1" value="30" required>
+                    </label>
+                    <fieldset class="packs-box">
+                        <legend>Packlar</legend>
+                        <label><input type="checkbox" name="packs" value="A1A2" checked> A1-A2</label>
+                        <label><input type="checkbox" name="packs" value="B1B2"> B1-B2</label>
+                    </fieldset>
+                    <button class="btn" type="submit">Customer yaratish</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title-row">
+                    <h2>Customerlar ro‘yxati</h2>
+                    <button class="btn btn-ghost" id="refreshUsersBtn" type="button">Yangilash</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Login</th>
+                                <th>Ism</th>
+                                <th>Packs</th>
+                                <th>Obuna</th>
+                                <th>Qurilmalar</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="tab-panel" id="tab-admin">
+            <div class="card">
+                <h2>Staff foydalanuvchi yaratish</h2>
+                <form id="createStaffForm" class="form-grid">
+                    <label>
+                        Login
+                        <input type="text" name="username" required>
+                    </label>
+                    <label>
+                        Ism
+                        <input type="text" name="displayName" required>
+                    </label>
+                    <label>
+                        Vaqtinchalik parol
+                        <input type="text" name="temporaryPassword" minlength="8" required>
+                    </label>
+                    <label>
+                        Rol
+                        <select name="role" id="staffRoleSelect">
+                            <option value="moderator">Moderator</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </label>
+                    <button class="btn" type="submit">Staff yaratish</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Staff ro‘yxati</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Login</th>
+                                <th>Ism</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="./adminpanel.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UZDARUS PRO | Dashboard</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body data-page="dashboard">
+    <main class="cabinet-shell">
+        <header class="cabinet-header">
+            <h1>UZDARUS PRO Dashboard</h1>
+            <p>Sizga biriktirilgan kurslar va obuna holati</p>
+        </header>
+
+        <section class="cabinet-body">
+            <div class="notice error" id="dashboardError"></div>
+            <div class="notice success" id="dashboardInfo"></div>
+
+            <div class="profile-top">
+                <div class="profile-title">
+                    <h2 id="profileName">Foydalanuvchi</h2>
+                    <p id="profileMeta">Yuklanmoqda...</p>
+                </div>
+                <span id="subscriptionBadge" class="status-pill status-inactive">Tekshirilmoqda...</span>
+            </div>
+
+            <div id="dashboardBlock" class="block-banner" style="display:none;"></div>
+
+            <div class="pack-grid" id="packGrid"></div>
+
+            <div class="actions">
+                <a class="btn" href="../index.html">Bosh sahifaga qaytish</a>
+                <button class="btn btn-secondary" id="logoutBtn" type="button">Chiqish</button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="./cabinet.js"></script>
+</body>
+
+</html>

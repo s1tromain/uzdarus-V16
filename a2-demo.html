@@ -1,0 +1,3757 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>A2 Kursi - Ruschasiga Ta'lim Platformasi</title>
+    <link rel="icon" href="./images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="./images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="./demo-public.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF9800;
+            --primary-dark: #F57C00;
+            --secondary: #FFD54F;
+            --light: #FFF8E1;
+            --dark: #333;
+            --gray: #666;
+            --light-gray: #f5f5f5;
+            --success: #4CAF50;
+            --error: #F44336;
+            --blue: #2196F3;
+        }
+
+        html {
+            overflow-x: hidden;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            width: 100%;
+            max-width: 100vw;
+            margin: 0;
+            padding: 0;
+        }
+
+        .image-preview {
+            position: relative;
+            cursor: zoom-in;
+        }
+
+        .zoom-hint {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .image-fullscreen {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .image-fullscreen img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+        }
+
+        .grammar-image {
+            width: 100%;
+            max-width: 900px;
+            display: block;
+            margin: 16px auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            object-fit: contain;
+            height: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #08617f;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .burger {
+            display: none;
+            cursor: pointer;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary-dark);
+            padding: 10px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-title {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .progress-percent {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--light);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        /* Topics Navigation */
+        .topics-nav {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .topic-btn {
+            background: var(--light);
+            border: 2px solid var(--primary);
+            color: var(--primary-dark);
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: left;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            min-height: 100px;
+        }
+
+        .topic-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-btn.completed {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .topic-btn.completed:after {
+            content: "✓";
+            position: absolute;
+            right: 20px;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .topic-btn.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Стили для заблокированных тем (4-12) */
+        .topic-btn.locked {
+            background-color: rgba(245, 245, 245, 0.7);
+            border-color: var(--gray);
+            color: var(--gray);
+            cursor: not-allowed;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-btn.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .topic-btn.locked:hover .locked-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .locked-overlay i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        /* Стили для заблокированных из-за последовательности (не пройдены предыдущие) */
+        .topic-btn.sequence-locked {
+            background-color: rgba(245, 245, 245, 0.9);
+            border-color: #ccc;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .topic-btn.sequence-locked .topic-icon {
+            color: #888;
+        }
+
+        .topic-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            z-index: 1;
+        }
+
+        .topic-btn.active .topic-icon,
+        .topic-btn.completed .topic-icon {
+            color: white;
+        }
+
+        .topic-btn.locked .topic-icon,
+        .topic-btn.sequence-locked .topic-icon {
+            color: var(--gray);
+        }
+
+        .topic-info {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .topic-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .topic-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Lesson Content */
+        .lesson-content {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .lesson-content.active {
+            display: block;
+        }
+
+        .lesson-title {
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        /* Grammar Section */
+        .grammar-section {
+            background: linear-gradient(135deg, var(--blue), #1976D2);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .grammar-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .grammar-header i {
+            font-size: 1.8rem;
+        }
+
+        .grammar-header h3 {
+            font-size: 1.5rem;
+        }
+
+        .grammar-content {
+            line-height: 1.8;
+        }
+
+        .grammar-rule {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .grammar-rule h4 {
+            margin-bottom: 8px;
+            color: var(--secondary);
+        }
+
+        /* Topic Explanation */
+        .topic-explanation {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .topic-explanation h3 {
+            color: var(--primary);
+            margin: 15px 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .topic-explanation p {
+            margin-bottom: 10px;
+        }
+
+        /* Audio Section */
+        .audio-section {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .audio-section h3 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .audio-player {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Examples */
+        .examples {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #eee;
+        }
+
+        .examples h4 {
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .example-item {
+            margin: 8px 0;
+            padding: 8px;
+            background: var(--light);
+            border-radius: 5px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .example-text {
+            font-weight: 600;
+        }
+
+        .audio-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-btn:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .audio-btn:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .audio-btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(255, 152, 0, 0.5);
+        }
+
+        .audio-btn:active {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 3px 15px rgba(255, 152, 0, 0.4);
+        }
+
+        .audio-btn i {
+            font-size: 1rem;
+        }
+
+        .audio-btn.loading {
+            background: var(--gray);
+            cursor: not-allowed;
+        }
+
+        .audio-btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-title {
+            color: var(--primary);
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.5rem;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .quiz-container {
+            margin-bottom: 30px;
+        }
+
+        .quiz-question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .quiz-option {
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary);
+            background-color: var(--secondary);
+            color: var(--primary-dark);
+        }
+
+        .quiz-option.correct-answer {
+            border-color: var(--success);
+            background-color: #c8e6c9;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .quiz-option.wrong-answer {
+            border-color: var(--error);
+            background-color: #ffcdd2;
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        input.correct-answer {
+            border-color: var(--success) !important;
+            background-color: #c8e6c9 !important;
+            color: #2e7d32 !important;
+            font-weight: bold;
+        }
+
+        input.wrong-answer {
+            border-color: var(--error) !important;
+            background-color: #ffcdd2 !important;
+            color: #c62828 !important;
+            font-weight: bold;
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background-color: #c8e6c9;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background-color: #ffcdd2;
+            color: var(--error);
+            font-weight: bold;
+        }
+
+        .fill-blank input.correct {
+            border-color: var(--success);
+            background-color: #c8e6c9;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .fill-blank input.incorrect {
+            border-color: var(--error);
+            background-color: #ffcdd2;
+            color: var(--error);
+            font-weight: bold;
+        }
+
+        .fill-blank-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .fill-blank {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: white;
+            padding: 16px;
+            border-radius: 10px;
+            border: 2px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .fill-blank:hover {
+            border-color: #FF9800;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+        }
+
+        .fill-blank span {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .fill-blank input {
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .fill-blank input:focus {
+            border-color: #FF9800;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: block;
+            margin: 30px auto 0;
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover:before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.6);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.5);
+        }
+
+        /* Results Section */
+        .results-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .score-display {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .results-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .correct-answers {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .correct-answers h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .answer-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .answer-item.correct {
+            border-left-color: var(--success);
+        }
+
+        .answer-item.incorrect {
+            border-left-color: var(--error);
+        }
+
+        .answer-status {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .complete-btn {
+            background: linear-gradient(135deg, var(--success), #45a049);
+            color: white;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: block;
+            margin: 20px auto 0;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .complete-btn:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .complete-btn:hover:before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .complete-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.6);
+        }
+
+        .complete-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .complete-btn.failed {
+            background: linear-gradient(135deg, var(--error), #D32F2F);
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+        }
+
+        .complete-btn.failed:hover {
+            box-shadow: 0 10px 30px rgba(244, 67, 54, 0.6);
+        }
+
+        .retry-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 20px;
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .retry-btn:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .retry-btn:hover:before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.6);
+        }
+
+        .retry-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* Subscription Section */
+        .subscription-section {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            color: white;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .subscription-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .subscription-section p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .subscribe-btn {
+            background-color: white;
+            color: var(--primary-dark);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .subscribe-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Extra Exercises Section */
+        .extra-exercises-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .extra-exercises-title {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .exercise-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .exercise-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .exercise-tab {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 25px;
+            border: 2px solid #88a0c5;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            min-height: 350px;
+            box-shadow: 0 10px 30px rgba(136, 160, 197, 0.2),
+                0 5px 15px rgba(136, 160, 197, 0.1);
+        }
+
+        .exercise-tab img {
+            width: 220px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-tab span {
+            text-align: center;
+            line-height: 1.4;
+            font-size: 1.1rem;
+            color: #88a0c5;
+            font-weight: 600;
+        }
+
+        .exercise-tab:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(136, 160, 197, 0.3),
+                0 10px 20px rgba(136, 160, 197, 0.2);
+            border-color: #6d8ab5;
+        }
+
+        .exercise-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 15px 35px rgba(255, 152, 0, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .exercise-tab.active span {
+            color: white;
+        }
+
+        .exercise-tab.active img {
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .exercise-content {
+            display: none;
+        }
+
+        .exercise-content.active {
+            display: block;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--light);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .exercise-item span {
+            flex-shrink: 0;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .exercise-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            min-width: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .exercise-input.correct {
+            border-color: var(--success);
+            background-color: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .exercise-input.incorrect {
+            border-color: var(--error);
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
+
+        .check-exercises-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: block;
+            margin: 30px auto;
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        .check-exercises-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.6);
+        }
+
+        .exercise-results {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .exercise-results.show {
+            display: block;
+        }
+
+        .exercise-score {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .extra-exercises-title {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .extra-exercises-title i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
+            background: linear-gradient(135deg, #2c3e50, #3d5a7c);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            overflow: hidden;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FF9800, #FFD54F);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+            text-align: center;
+            padding: 0 20px;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        .loading-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            padding: 0 20px;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #FF9800;
+            border-radius: 50%;
+            animation: spin-loader 1s linear infinite;
+        }
+
+        @keyframes spin-loader {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+            }
+
+            .container {
+                padding: 0 15px;
+                width: 100%;
+            }
+
+            .burger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                max-width: 100vw;
+                height: calc(100vh - 70px);
+                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                flex-direction: column;
+                align-items: center;
+                padding-top: 30px;
+                transition: all 0.5s ease;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .loading-logo {
+                font-size: 3rem;
+            }
+
+            .loading-subtitle {
+                font-size: 1rem;
+            }
+
+            .loading-spinner {
+                width: 50px;
+                height: 50px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+
+            .fill-blank {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .fill-blank input {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .example-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .audio-btn {
+                align-self: stretch;
+                justify-content: center;
+            }
+
+            .subscription-section {
+                padding: 30px 20px;
+            }
+
+            .carousel-image {
+                max-height: 400px;
+            }
+
+            .carousel-caption-text {
+                font-size: 1.3rem;
+            }
+
+            .carousel-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+
+            .carousel-audio-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .fill-blank-container {
+                grid-template-columns: 1fr;
+            }
+
+            .fill-blank {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .fill-blank input {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                overflow-x: hidden;
+            }
+
+            .container {
+                padding: 0 10px;
+                width: 100%;
+            }
+
+            .loading-logo {
+                font-size: 2.5rem;
+                padding: 0 15px;
+            }
+
+            .loading-subtitle {
+                font-size: 0.9rem;
+                padding: 0 15px;
+            }
+
+            .loading-spinner {
+                width: 45px;
+                height: 45px;
+            }
+
+            .loading-text {
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 1.6rem;
+                padding: 0 10px;
+            }
+
+            .lesson-title {
+                font-size: 1.5rem;
+                padding: 0 10px;
+            }
+
+            .topic-btn {
+                padding: 15px;
+                word-wrap: break-word;
+            }
+
+            .topics-grid {
+                padding: 0 5px;
+            }
+
+            .submit-btn,
+            .retry-btn,
+            .complete-btn,
+            .subscribe-btn {
+                width: 100%;
+                padding: 14px;
+                font-size: 1rem;
+                word-wrap: break-word;
+            }
+
+            .example-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .quiz-option {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .fill-blank-container {
+                grid-template-columns: 1fr;
+            }
+
+            .fill-blank span {
+                font-size: 0.9rem;
+            }
+
+            .fill-blank input {
+                font-size: 0.9rem;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">UzdaRus</div>
+        <div class="loading-subtitle">Rus tilini o'rganish platformasi</div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Boshlash<span class="loading-dots"></span></div>
+    </div>
+    
+    <!-- Note: Loading screen will hide after all data is loaded from Firebase -->
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <span style="color: white;">Uzda</span><span style="color: #08617f;">Rus</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#topics">Mavzular</a></li>
+                <li><a href="#lesson">Darslar</a></li>
+                <li><a href="#progress">Progress</a></li>
+                <li><a href="#subscription">Obuna</a></li>
+            </ul>
+            <div class="burger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Rus Tili A2 - "O'rta" Kursi</h1>
+            <p>Rus tilini 0-dan o'rganing. 3 ta mavzu - bepul, keyingi mavzular uchun obuna talab qilinadi.</p>
+            <a href="#topics" class="back-btn"><i class="fas fa-book"></i> Mavzularni ko'rish</a>
+        </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section class="progress-section" id="progress">
+        <div class="container">
+            <div class="progress-header">
+                <div class="progress-title">Kursdagi Progressingiz</div>
+                <div class="progress-percent" id="progressPercent">0%</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Topics Section -->
+    <section class="content-section" id="topics">
+        <div class="container">
+            <h2 style="text-align: center; color: var(--primary-dark); margin-bottom: 25px; font-size: 2rem;">
+                Kurs Mavzulari (16 ta mavzu)
+            </h2>
+            <div class="topics-nav">
+                <div class="topics-grid" id="topicsContainer">
+                    <!-- Topics will be loaded by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscription Section -->
+    <section class="subscription-section" id="subscription">
+        <div class="container">
+            <h3>To'liq Kursga Obuna Bo'ling!</h3>
+            <p>3-mavzu va undan keyingi barcha mavzular (13 ta mavzu), video darslar, qo'shimcha materiallar va
+                sertifikat olish uchun obuna bo'lishingiz kerak.</p>
+            <button class="subscribe-btn" onclick="window.location.href='./index.html#pricing'">
+                <i class="fas fa-crown"></i> Hoziroq Obuna Bo'lish
+            </button>
+        </div>
+    </section>
+    <!-- Lesson Content -->
+    <section class="content-section" id="lesson">
+        <div class="container">
+            <div id="lessonContent">
+                <!-- Lesson content will be loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="content-section" id="quiz">
+        <div class="container">
+            <div class="quiz-section" id="quizSection">
+                <!-- Quiz content will be loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="results-section" id="resultsSection">
+                <div class="score-display" id="scoreDisplay">Sizning natijangiz: 0/10</div>
+                <div class="results-message" id="resultsMessage">
+                    Test natijalaringiz
+                </div>
+                <div class="correct-answers" id="correctAnswers">
+                    <h3>To'g'ri javoblar:</h3>
+                    <!-- Answers will be populated by JavaScript -->
+                </div>
+                <button class="complete-btn" id="completeBtn">Mavzuni tugatish</button>
+                <button class="retry-btn" id="retryBtn">Qayta urinib ko'rish</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h3 style="color: white; margin-bottom: 10px; font-size: 1.5rem;">UzdaRus - Rus Tili o'quv Platformasi</h3>
+            <p>© 2025 Barcha huquqlar himoyalangan. Demo versiya - faqat 3 ta mavzu bepul.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        console.log('🚀 Script started loading...');
+        
+        // ==================== FIREBASE IMPORTS ====================
+        // Асинхронная загрузка Firebase БЕЗ блокировки страницы
+        (async function loadFirebase() {
+            console.log('📦 Starting Firebase module import...');
+            try {
+                const { saveQuizResult, getUserQuizResults, saveUserProgress, getUserProgress, logActivity } = await import('./firebase-utils.js');
+                
+                // Делаем функции доступными глобально
+                window.saveQuizResult = saveQuizResult;
+                window.getUserQuizResults = getUserQuizResults;
+                window.saveUserProgress = saveUserProgress;
+                window.getUserProgress = getUserProgress;
+                window.logActivity = logActivity;
+                
+                console.log('✅ Firebase module loaded successfully');
+                window.firebaseReady = true;
+            } catch (error) {
+                console.log('⚠️ Firebase module not loaded, using localStorage fallback');
+                window.firebaseReady = true; // Ставим true чтобы не ждать
+            }
+        })();
+        
+        // ==================== USER SESSION ====================
+        let currentUser = null;
+        let currentUserId = null;
+
+        // Делаем переменные доступными глобально
+        window.currentUser = null;
+        window.currentUserId = null;
+        window.firebaseReady = false; // Изначально false
+
+        // Проверка авторизации
+        function checkAuth() {
+            const userSession = localStorage.getItem('currentUser');
+            if (userSession) {
+                currentUser = JSON.parse(userSession);
+                currentUserId = currentUser.id;
+                window.currentUser = currentUser;
+                window.currentUserId = currentUserId;
+                console.log('✅ User logged in:', currentUser.email);
+                return true;
+            } else {
+                console.log('⚠️ User not logged in');
+                return false;
+            }
+        }
+    </script>
+    
+    <script>
+        // ==================== ELEVEN LABS CONFIG ====================
+        const ELEVENLABS_API_KEY = 'sk_9f943521f4a2743d84710958d299c37f6fa8f7b31ccf4f38';
+        const ELEVENLABS_VOICE_ID = 'MF3mGyEYCl7XYWbV9V6o';
+
+        // ==================== AUDIO FUNCTION ====================
+        async function speakText(text) {
+            const button = event?.target?.closest('.audio-btn');
+            const originalHTML = button?.innerHTML;
+
+            if (button) {
+                button.innerHTML = '<i class="fas fa-spinner"></i> Yuklanmoqda...';
+                button.classList.add('loading');
+                button.disabled = true;
+            }
+
+            try {
+                if (!ELEVENLABS_API_KEY || ELEVENLABS_API_KEY.includes('ваш_ключ')) {
+                    throw new Error('API kaliti mavjud emas');
+                }
+
+                const response = await fetch(
+                    `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'audio/mpeg',
+                            'Content-Type': 'application/json',
+                            'xi-api-key': ELEVENLABS_API_KEY
+                        },
+                        body: JSON.stringify({
+                            text: text,
+                            model_id: "eleven_multilingual_v2",
+                            voice_settings: {
+                                stability: 0.5,
+                                similarity_boost: 0.75
+                            }
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`ElevenLabs xatosi: ${response.status}`);
+                }
+
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+
+                audio.onended = function () {
+                    if (button) {
+                        button.innerHTML = originalHTML;
+                        button.classList.remove('loading');
+                        button.disabled = false;
+                    }
+                };
+
+                await audio.play();
+
+            } catch (error) {
+                console.error('ElevenLabs xatosi:', error);
+
+                if (button) {
+                    button.innerHTML = originalHTML;
+                    button.classList.remove('loading');
+                    button.disabled = false;
+                }
+
+                speakWithBrowser(text);
+            }
+        }
+
+        function speakWithBrowser(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ru-RU';
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                speechSynthesis.speak(utterance);
+            } else {
+                alert('Matn: ' + text);
+            }
+        }
+
+        // Course data with 16 topics for A2 level (3 free, 13 locked)
+        const courseData = {
+            topics: [
+                {
+                    id: 1,
+                    title: "«У меня есть» va kundalik hayotim",
+                    description: "Grammatika: «быть» fe'li. o'zingni tanishtirish",
+                    isLocked: false,
+                    isSubscriptionLocked: false,
+                    grammar: `
+                        <h4>1. "У меня есть" konstruksiyasi</h4>
+                        <p>Rus tilida narsaga ega bo'lishni bildirish uchun "У меня есть" ishlatiladi:</p>
+                        <ul>
+                            <li><strong>У меня есть</strong> - menda bor</li>
+                            <li><strong>У тебя есть</strong> - senda bor</li>
+                            <li><strong>У него/неё есть</strong> - unda bor</li>
+                            <li><strong>У нас есть</strong> - bizda bor</li>
+                        </ul>
+                        
+                        <h4>2. "Быть" fe'lining shakllari</h4>
+                        <p>Hozirgi zamonda "быть" fe'li tushirib qoldiriladi:</p>
+                        <ul>
+                            <li><strong>Я студент</strong> - Men talabaman (✗ Я есть студент)</li>
+                            <li><strong>Он врач</strong> - U shifokor</li>
+                            <li><strong>Мы друзья</strong> - Biz do'stlarmiz</li>
+                        </ul>
+                        
+                        <p>o'tgan zamonda:</p>
+                        <ul>
+                            <li><strong>Я был/была</strong> - Men edim</li>
+                            <li><strong>Ты был/была</strong> - Sen eding</li>
+                            <li><strong>Мы были</strong> - Biz edik</li>
+                        </ul>
+                        
+                        <h4>3. Kundalik ishlar haqida</h4>
+                        <p>Kundalik ishlarni tasvirlash:</p>
+                        <ul>
+                            <li><strong>Я просыпаюсь</strong> - Men uyg'onaman</li>
+                            <li><strong>Я умываюсь</strong> - Men yuvinaman</li>
+                            <li><strong>Я завтракаю</strong> - Men nonushta qilaman</li>
+                            <li><strong>Я работаю</strong> - Men ishlayman</li>
+                            <li><strong>Я отдыхаю</strong> - Men dam olaman</li>
+                        </ul>
+                    `,
+                    explanation: {
+                        uz: "A2 darajasida siz o'zingiz haqida to'liqroq ma'lumot berishni va kundalik ishlaringiz haqida gapira olishni o'rganasiz."
+                    },
+                    content: `
+                        <div style="background: linear-gradient(135deg, #4CAF50, #45a049); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0; box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);">
+                            <div style="font-size: 4rem; margin-bottom: 15px;">🗣️</div>
+                            <h3 style="color: white; margin-bottom: 15px; font-size: 1.8rem;">So'zlar lug'ati</h3>
+                            <p style="color: rgba(255,255,255,0.9); margin-bottom: 25px; font-size: 1.1rem;">
+                                Ushbu mavzuda <strong>40 ta so'z</strong> o'rganasiz
+                            </p>
+                            <button onclick="window.location.href='a2-demo-vocabulary.html?topic=1'" 
+                                    style="background: white; color: #4CAF50; border: none; padding: 15px 40px; border-radius: 50px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"
+                                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)'"
+                                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)'">
+                                <i class="fas fa-book-open"></i> Lug'atni ochish
+                            </button>
+                            <p style="color: rgba(255,255,255,0.8); margin-top: 15px; font-size: 0.9rem;">
+                                <i class="fas fa-graduation-cap"></i> Kundalik hayot so'zlarini o'rganing
+                            </p>
+                        </div>
+                        
+                        <h3>Muhim qoidalar:</h3>
+                        <p>• "У меня есть" konstruksiyasida "есть" so'zi muhim - uni tushirib bo'lmaydi.</p>
+                        <p>• Hozirgi zamonda "быть" fe'li ishlatilmaydi, faqat o'tgan va kelasi zamonda.</p>
+                        <p>• Kundalik ishlarni tasvirlashda -ся qo'shimchali fe'llar ko'p ishlatiladi.</p>
+                    `,
+                    quiz: {
+                        mcQuestions: [
+                            "'Menda kitob bor' rus tilida qanday aytiladi?",
+                            "Quyidagi gaplardan qaysi biri to'g'ri?",
+                            "'Men shifokorman' rus tilida qanday aytiladi?",
+                            "Hozirgi zamonda 'быть' fe'li qanday ishlatiladi?",
+                            "'Men har kuni ertalab uyg'onaman' qanday aytiladi?",
+                            "'Senda mashina bormi?' rus tilida qanday aytiladi?",
+                            "'Bizda katta uy bor' qanday aytiladi?",
+                            "'Умываться' fe'li nima demakdir?",
+                            "'Завтракать' fe'li nima demakdir?",
+                            "'Unda telefon bor' qanday aytiladi?",
+                            "'Men o'qituvchiman' to'g'ri varianti qaysi?",
+                            "'Работать' fe'li nima demakdir?",
+                            "'Отдыхать' fe'li nima demakdir?",
+                            "'U talabaman' - bu gap to'g'rimi?",
+                            "'Ularda kompyuter bor' qanday aytiladi?"
+                        ],
+                        mcOptions: [
+                            ["У меня книга", "У меня есть книга", "Я имею книгу", "Моя книга"],
+                            ["Я есть студент", "Я студент", "Я буду студент", "Я был студент"],
+                            ["Я есть врач", "Я врач", "Я был врач", "Я буду врач"],
+                            ["Har doim ishlatiladi", "Faqat sifatda", "Tushirib qoldiriladi", "Fe'l shaklida"],
+                            ["Я встаю каждый день утром", "Я просыпаюсь каждое утро", "Я буду вставать утром", "Я был вставать утром"],
+                            ["У тебя есть машина?", "Ты имеешь машину?", "Твоя машина есть?", "Есть машина у тебя?"],
+                            ["У нас большой дом", "У нас есть большой дом", "Мы имеем большой дом", "Наш дом большой"],
+                            ["yuvinmoq", "ishlash", "uyg'onmoq", "uxlamoq"],
+                            ["nonushta qilmoq", "tushlik qilmoq", "kechki ovqat", "dam olmoq"],
+                            ["У него есть телефон", "Он имеет телефон", "Его телефон есть", "У него телефон"],
+                            ["Я есть учитель", "Я учитель", "Я буду учитель", "Я был учитель"],
+                            ["ishlash", "uxlamoq", "o'qimoq", "yozmoq"],
+                            ["dam olmoq", "ishlash", "o'ynamoq", "yugurmoq"],
+                            ["To'g'ri", "Noto'g'ri - 'Он студент' bo'lishi kerak", "To'g'ri - 'Я' bilan", "Faqat ayol uchun"],
+                            ["У них есть компьютер", "Их компьютер есть", "Они имеют компьютер", "У них компьютер"]
+                        ],
+                        mcAnswers: [1, 1, 1, 2, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+                        blankQuestions: [
+                            '"___ меня есть собака" (Menda it bor)',
+                            '"Я ___" (Men talabaman)',
+                            '"___ тебя есть время?" (Senda vaqt bormi?)',
+                            '"Я ___ каждый день" (Men har kuni uyg\'onaman)',
+                            '"Мы ___" (Biz do\'stlarmiz)',
+                            '"Она ___ каждое утро" (U har kuni ertalab nonushta qiladi)',
+                            '"___ них есть дом" (Ularda uy bor)',
+                            '"Я ___ вечером" (Men kechqurun dam olaman)',
+                            '"___ него есть брат" (Unda aka bor)',
+                            '"Они ___" (Ular o\'qituvchilar)',
+                            '"___ вас есть вопросы?" (Sizda savollar bormi?)',
+                            '"Я ___ каждое утро" (Men har kuni ertalab yuvinaman)',
+                            '"Он ___ в офисе" (U ofisda ishlaydi)',
+                            '"___ неё есть кошка" (Unda mushuk bor - ayol)',
+                            '"Мы ___ в субботу" (Biz shanba kuni dam olamiz)'
+                        ],
+                        blankAnswers: ["У", "студент", "У", "просыпаюсь", "друзья", "завтракает", "У", "отдыхаю", "У", "учителя", "У", "умываюсь", "работает", "У", "отдыхаем"]
+                    }
+                },
+                {
+                    id: 2,
+                    title: "Oila va munosabatlar",
+                    description: "Grammatika: O\'tgan zamon, egalik olmoshlari",
+                    isLocked: false,
+                    isSubscriptionLocked: false,
+                    grammar: `
+                        <h4>1. o'tgan zamon (Прошедшее время)</h4>
+                        <p>Rus tilida o'tgan zamon yaratish uchun fe'lning asosiga quyidagi qo'shimchalar qo'shiladi:</p>
+                        <ul>
+                            <li><strong>Erkak jins:</strong> работал (ishladi)</li>
+                            <li><strong>Ayol jins:</strong> работала (ishladi)</li>
+                            <li><strong>o'rta jins:</strong> работало</li>
+                            <li><strong>Ko'plik:</strong> работали (ishladilar)</li>
+                        </ul>
+                        
+                        <h4>2. Egalik olmoshlari (Притяжательные местоимения)</h4>
+                        <p>Biror narsaga egalikni ko'rsatish:</p>
+                        <ul>
+                            <li><strong>Мой/моя/моё/мои</strong> - mening</li>
+                            <li><strong>Твой/твоя/твоё/твои</strong> - sening</li>
+                            <li><strong>Его</strong> - uning (erkak)</li>
+                            <li><strong>Её</strong> - uning (ayol)</li>
+                            <li><strong>Наш/наша/наше/наши</strong> - bizning</li>
+                            <li><strong>Ваш/ваша/ваше/ваши</strong> - sizning</li>
+                            <li><strong>Их</strong> - ularning</li>
+                        </ul>
+                        
+                        <h4>3. Oila a'zolari</h4>
+                        <p>Asosiy oila a'zolari:</p>
+                        <ul>
+                            <li><strong>Семья</strong> - oila</li>
+                            <li><strong>Родители</strong> - ota-ona</li>
+                            <li><strong>Муж</strong> - er</li>
+                            <li><strong>Жена</strong> - xotin</li>
+                            <li><strong>Сын</strong> - o'g'il</li>
+                            <li><strong>Дочь</strong> - qiz</li>
+                            <li><strong>Брат</strong> - aka/uka</li>
+                            <li><strong>Сестра</strong> - opa/singil</li>
+                        </ul>
+                    `,
+                    explanation: {
+                        uz: "A2 darajasida siz oila a\'zolaringiz va do\'stlaringiz haqida o\'tgan zamonda gapira olishni o\'rganasiz."
+                    },
+                    content: `
+                        <div style="background: linear-gradient(135deg, #E91E63, #C2185B); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0; box-shadow: 0 8px 25px rgba(233, 30, 99, 0.3);">
+                            <div style="font-size: 4rem; margin-bottom: 15px;">👨‍👩‍👧‍👦</div>
+                            <h3 style="color: white; margin-bottom: 15px; font-size: 1.8rem;">Oila va munosabatlar lug'ati</h3>
+                            <p style="color: rgba(255,255,255,0.9); margin-bottom: 25px; font-size: 1.1rem;">
+                                Ushbu mavzuda <strong>45 ta so'z</strong> o'rganasiz
+                            </p>
+                            <button onclick="window.location.href='a2-demo-vocabulary.html?topic=2'" 
+                                    style="background: white; color: #E91E63; border: none; padding: 15px 40px; border-radius: 50px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"
+                                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)'"
+                                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)'">
+                                <i class="fas fa-book-open"></i> Lug'atni ochish
+                            </button>
+                            <p style="color: rgba(255,255,255,0.8); margin-top: 15px; font-size: 0.9rem;">
+                                <i class="fas fa-users"></i> Oila va munosabatlar haqida so'zlashni o'rganing
+                            </p>
+                        </div>
+                        
+                        <h3>Muhim qoidalar:</h3>
+                        <p>• o'tgan zamonda jins va ko'plikka e'tibor bering.</p>
+                        <p>• Egalik olmoshlari otning jinsi bilan mos kelishi kerak.</p>
+                        <p>• "Его" va "её" so'zlari o'zgarmaydi (jins va sondan qat'i nazar).</p>
+                    `,
+                    quiz: {
+                        mcQuestions: [
+                            "'Семья' so'zi o'zbekcha nima?",
+                            "'Муж' so'zi o'zbekcha nima?",
+                            "'Дочь' so'zi o'zbekcha nima?",
+                            "'Брат' so'zi o'zbekcha nima?",
+                            "'Сестра' so'zi o'zbekcha nima?",
+                            "'Родители' so'zi o'zbekcha nima?",
+                            "'Жена' so'zi o'zbekcha nima?",
+                            "'Сын' so'zi o'zbekcha nima?",
+                            "'Бабушка' so'zi o'zbekcha nima?",
+                            "'Дедушка' so'zi o'zbekcha nima?",
+                            "'Мой' egalik olmoshi qaysi bilan to'g'ri keladi?",
+                            "'Её' egalik olmoshi nima demakdir?",
+                            "'Наш' egalik olmoshi qaysi bilan to'g'ri keladi?",
+                            "'Его' egalik olmoshi nima demakdir?",
+                            "'Их' egalik olmoshi nima demakdir?"
+                        ],
+                        mcOptions: [
+                            ["oila", "do'st", "uy", "ota"],
+                            ["er", "ota", "aka", "o'g'il"],
+                            ["qiz", "ona", "opa", "xotin"],
+                            ["aka/uka", "er", "o'g'il", "ota"],
+                            ["opa/singil", "ona", "qiz", "xotin"],
+                            ["ota-ona", "aka-uka", "oila", "bolalar"],
+                            ["xotin", "ona", "qiz", "opa"],
+                            ["o'g'il", "aka", "uka", "er"],
+                            ["buvi", "ona", "opa", "qiz"],
+                            ["bobo", "ota", "aka", "o'g'il"],
+                            ["брат (erkak ot)", "сестра (ayol ot)", "семья (ayol ot)", "друг (erkak ot)"],
+                            ["uning (erkak)", "uning (ayol)", "mening", "bizning"],
+                            ["брат (erkak ot)", "сестра (ayol ot)", "семья (ayol ot)", "друг (erkak ot)"],
+                            ["uning (erkak)", "uning (ayol)", "mening", "bizning"],
+                            ["ularning", "uning", "sizning", "mening"]
+                        ],
+                        mcAnswers: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+                        blankQuestions: [
+                            '"___ брат работает в банке" (Mening akam bankda ishlaydi)',
+                            '"Это ___ сестра" (Bu uning singlisi - erkak uchun)',
+                            '"___ родители живут в Ташкенте" (Bizning ota-onamiz Toshkentda yashaydi)',
+                            '"Вчера я ___ к бабушке" (Kecha men buviga bordim - ayol)',
+                            '"Она ___ учительницей" (U o\'qituvchi edi - ayol)',
+                            '"Мой отец ___ инженером" (Mening otam muhandis edi)',
+                            '"___ дети очень умные" (Uning bolalari juda aqlli - ayol uchun)',
+                            '"Мы ___ в музее" (Biz muzeyda edik)',
+                            '"___ семья очень дружная" (Sizning oilangiz juda do\'stona)',
+                            '"Его жена ___ врачом" (Uning xotini shifokor edi)',
+                            '"___ муж хорошо готовит" (Mening erim yaxshi tayyorlaydi)',
+                            '"Мой сын ___ в школе" (Mening o\'g\'lim maktabda edi)',
+                            '"___ дочь учится в университете" (Ularning qizi universitetda o\'qiydi)',
+                            '"Вчера моя мама ___ пирог" (Kecha mening onam pirog tayyorladi)',
+                            '"Мои родители ___ молодые" (Mening ota-onam yosh edi)'
+                        ],
+                        blankAnswers: ["Мой", "его", "Наши", "ходила", "была", "был", "Её", "были", "Ваша", "была", "Мой", "был", "Их", "готовила", "были"]
+                    }
+                },
+                {
+                    id: 3,
+                    title: "Uy va yashash joyi",
+                    description: "Grammatika: Prepozitsion kelishik, joy ma\'noli so\'zlar",
+                    isLocked: false,
+                    isSubscriptionLocked: false,
+                    grammar: `
+                        <h4>1. Prepozitsion kelishik (Предложный падеж)</h4>
+                        <p>Joy bildirish uchun ishlatiladi. "В" va "НА" predloglari bilan:</p>
+                        <ul>
+                            <li><strong>В комнате</strong> - xonada</li>
+                            <li><strong>В городе</strong> - shaharda</li>
+                            <li><strong>На улице</strong> - ko'chada</li>
+                            <li><strong>На столе</strong> - stolda</li>
+                        </ul>
+                        
+                        <h4>2. Uy xonalari va jihozlari</h4>
+                        <p>Asosiy xonalar:</p>
+                        <ul>
+                            <li><strong>Квартира</strong> - kvartira</li>
+                            <li><strong>Комната</strong> - xona</li>
+                            <li><strong>Кухня</strong> - oshxona</li>
+                            <li><strong>Ванная</strong> - hammom</li>
+                            <li><strong>Спальня</strong> - yotoq xona</li>
+                            <li><strong>Гостиная</strong> - mehmonxona</li>
+                        </ul>
+                        
+                        <h4>3. Uy jihozlari</h4>
+                        <p>Muhim so'zlar:</p>
+                        <ul>
+                            <li><strong>Стол</strong> - stol</li>
+                            <li><strong>Стул</strong> - stul</li>
+                            <li><strong>Кровать</strong> - karavot</li>
+                            <li><strong>Шкаф</strong> - shkaf</li>
+                            <li><strong>Диван</strong> - divan</li>
+                        </ul>
+                    `,
+                    explanation: {
+                        uz: "A2 darajasida siz o\'z uyingiz va uning ichki qismini tasvirlashni o\'rganasiz."
+                    },
+                    content: `
+                        <div style="background: linear-gradient(135deg, #FF9800, #F57C00); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0; box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);">
+                            <div style="font-size: 4rem; margin-bottom: 15px;">🏠</div>
+                            <h3 style="color: white; margin-bottom: 15px; font-size: 1.8rem;">Uy va joy lug'ati</h3>
+                            <p style="color: rgba(255,255,255,0.9); margin-bottom: 25px; font-size: 1.1rem;">
+                                Ushbu mavzuda <strong>50 ta so'z</strong> o'rganasiz
+                            </p>
+                            <button onclick="window.location.href='a2-demo-vocabulary.html?topic=3'" 
+                                    style="background: white; color: #FF9800; border: none; padding: 15px 40px; border-radius: 50px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"
+                                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)'"
+                                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)'">
+                                <i class="fas fa-book-open"></i> Lug'atni ochish
+                            </button>
+                            <p style="color: rgba(255,255,255,0.8); margin-top: 15px; font-size: 0.9rem;">
+                                <i class="fas fa-home"></i> Uy va yashash joyi haqida so'zlashni o'rganing
+                            </p>
+                        </div>
+                        
+                        <h3>Muhim qoidalar:</h3>
+                        <p>• "В" yopiq joylar uchun ishlatiladi (в комнате).</p>
+                        <p>• "НА" ochiq joylar uchun ishlatiladi (на улице).</p>
+                        <p>• Prepozitsion kelishikda otlar o'zgaradi: комната → в комнате.</p>
+                    `,
+                    quiz: {
+                        mcQuestions: [
+                            "'Xonada' rus tilida qanday aytiladi?",
+                            "Quyidagi gaplardan qaysi biri to'g'ri?",
+                            "'Oshxonada' rus tilida qanday aytiladi?",
+                            "'Столда' (stolda) qanday yoziladi?",
+                            "Quyidagi qaysi предлог yopiq joylar uchun ishlatiladi?",
+                            "'Квартира' so'zi nima demakdir?",
+                            "'Hammomda' qanday aytiladi?",
+                            "'Спальня' so'zi nima demakdir?",
+                            "'Гостиная' so'zi nima demakdir?",
+                            "'Shaharda' qanday aytiladi?",
+                            "'Ko'chada' qanday aytiladi?",
+                            "'Шкаф' so'zi nima demakdir?",
+                            "'Кровать' so'zi nima demakdir?",
+                            "'Диван' uchun qaysi предлог ishlatiladi?",
+                            "'Музейda' qanday aytiladi?"
+                        ],
+                        mcOptions: [
+                            ["В комната", "В комнате", "На комнате", "Комната"],
+                            ["В улице", "На улице", "В улица", "На улица"],
+                            ["В кухня", "На кухне", "В кухне", "Кухня"],
+                            ["В столе", "В стол", "На столе", "На стол"],
+                            ["На", "О", "В", "Из"],
+                            ["xona", "kvartira", "uy", "bino"],
+                            ["В ванная", "На ванной", "В ванной", "В ванна"],
+                            ["mehmonxona", "yotoq xona", "oshxona", "hammom"],
+                            ["yotoq xona", "mehmonxona", "oshxona", "xona"],
+                            ["В город", "На городе", "В городе", "На город"],
+                            ["В улице", "На улице", "В улица", "На улица"],
+                            ["stol", "stul", "shkaf", "divan"],
+                            ["karavot", "stul", "stol", "divan"],
+                            ["На", "В", "Ikkalasi ham", "Hech biri"],
+                            ["На музее", "В музее", "В музея", "На музея"]
+                        ],
+                        mcAnswers: [1, 1, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 0, 0, 1],
+                        blankQuestions: [
+                            '"Книга ___ столе" (Kitob stolda)',
+                            '"Я живу ___ квартире" (Men kvartirada yashayman)',
+                            '"___ комнате есть диван" (Xonada divan bor)',
+                            '"Мы гуляем ___ парке" (Biz parkda sayr qilamiz)',
+                            '"Холодильник ___ кухне" (Muzlatgich oshxonada)',
+                            '"Кровать ___ спальне" (Karavot yotoq xonada)',
+                            '"Телевизор ___ гостиной" (Televizor mehmonxonada)',
+                            '"Я работаю ___ офисе" (Men ofisda ishlayman)',
+                            '"Дети играют ___ улице" (Bolalar ko\'chada o\'ynaydilar)',
+                            '"Картина ___ стене" (Rasm devorida)',
+                            '"Мы живём ___ доме" (Biz uyda yashaymiz)',
+                            '"Лампа ___ столе" (Lampa stolda)',
+                            '"Я учусь ___ университете" (Men universitetda o\'qiyman)',
+                            '"Одежда ___ шкафу" (Kiyimlar shkafda)',
+                            '"Машина ___ гараже" (Mashina garajda)'
+                        ],
+                        blankAnswers: ["на", "в", "В", "в", "в", "в", "в", "в", "на", "на", "в", "на", "в", "в", "в"]
+                    }
+                },
+                {
+                    id: 4,
+                    title: "Kunlar, oylar va fasllar",
+                    description: "Vaqt va fasllar haqida so\'zlashish",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to\'liq kurs obunachilari uchun ochiq. Obuna bo\'lish orqali 4-mavzuni va barcha qo\'shimcha materiallarni o\'rganing."
+                    },
+                    content: `
+                        <div style="text-align: center; padding: 50px 20px;">
+                            <i class="fas fa-lock" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"></i>
+                            <h3 style="color: var(--primary-dark); margin-bottom: 15px;">Bu mavzu faqat obuna uchun!</h3>
+                            <p style="font-size: 1.2rem; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                                Ushbu mavzuni ochish uchun to\'liq kursga obuna bo\'ling. Obuna orqali siz:
+                            </p>
+                            <ul style="text-align: left; display: inline-block; margin-bottom: 30px;">
+                                <li>4-mavzu va undan keyingi barcha mavzularni o\'rganasiz (13 ta qo\'shimcha mavzu)</li>
+                                <li>Video darslar va audio materiallarga ega bo\'lasiz</li>
+                                <li>Qo\'shimcha mashqlar va testlarni yechasiz</li>
+                                <li>Yakunda sertifikat olish imkoniyatiga ega bo\'lasiz</li>
+                            </ul>
+                            <button class="subscribe-btn" onclick="subscribeNow()" style="font-size: 1.3rem; padding: 15px 50px;">
+                                <i class="fas fa-crown"></i> Obuna Bo'lish
+                            </button>
+                        </div>
+                    `,
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 5,
+                    title: "Kasblar va mashg'ulotlar",
+                    description: "Kasblar va ish haqida gapirish",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: `
+                        <div style="text-align: center; padding: 50px 20px;">
+                            <i class="fas fa-lock" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"></i>
+                            <h3 style="color: var(--primary-dark); margin-bottom: 15px;">Bu mavzu faqat obuna uchun!</h3>
+                            <p style="font-size: 1.2rem; margin-bottom: 30px;">
+                                To\'liq kursga obuna bo\'lib, barcha mavzularni oching.
+                            </p>
+                            <button class="subscribe-btn" onclick="subscribeNow()" style="font-size: 1.3rem; padding: 15px 50px;">
+                                <i class="fas fa-crown"></i> Obuna Bo'lish
+                            </button>
+                        </div>
+                    `,
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 6,
+                    title: "Shaharning joylari",
+                    description: "Shahar atrofi va yo'nalishlar",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 7,
+                    title: "Ovqatlanish va restoran",
+                    description: "Ovqat va ichimliklar haqida",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 8,
+                    title: "Kiyim-kechak va moda",
+                    description: "Kiyimlar va o'lchamlar haqida",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 9,
+                    title: "Transport va sayohat",
+                    description: "Transport vositalari va yo'nalishlar",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 10,
+                    title: "Sog'liq va dorixona",
+                    description: "Sog'liq va tibbiy yordam haqida",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 11,
+                    title: "Xobbiy va bo'sh vaqt",
+                    description: "Xobbi va dam olish haqida",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 12,
+                    title: "Qoidalar va maslahatlar",
+                    description: "Maslahat berish va qoidalar",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 13,
+                    title: "o'tmish va kelajak",
+                    description: "Vaqt shakllari va istaklar",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 14,
+                    title: "Taqqoslash va tanlov",
+                    description: "Taqqoslash darajalari",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 15,
+                    title: "Muloqot va munosabatlar",
+                    description: "Muloqot shakllari",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                },
+                {
+                    id: 16,
+                    title: "Madaniyat va an'analar",
+                    description: "Madaniy xususiyatlar",
+                    isLocked: true,
+                    isSubscriptionLocked: true,
+                    grammar: "",
+                    explanation: {
+                        uz: "Ushbu mavzu faqat to'liq kurs obunachilari uchun ochiq."
+                    },
+                    content: "",
+                    quiz: {
+                        mcQuestions: [],
+                        mcOptions: [],
+                        mcAnswers: [],
+                        blankQuestions: [],
+                        blankAnswers: []
+                    }
+                }
+            ]
+        };
+
+        // ==================== GLOBAL VARIABLES ====================
+        let completedTopics = [];
+        let currentTopicId = 1;
+        let currentScore = 0;
+        const PASSING_SCORE = 7;
+        let userQuizResults = {};
+
+        // ==================== FIREBASE HELPER FUNCTIONS ====================
+        // Ожидание загрузки Firebase
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                if (window.firebaseReady) {
+                    console.log('✅ Firebase already ready');
+                    resolve();
+                } else {
+                    let attempts = 0;
+                    const checkInterval = setInterval(() => {
+                        attempts++;
+                        if (window.firebaseReady) {
+                            console.log(`✅ Firebase ready after ${attempts * 50}ms`);
+                            clearInterval(checkInterval);
+                            resolve();
+                        } else if (attempts > 100) { // Макс 5 секунд (100 * 50ms)
+                            console.warn('⚠️ Firebase timeout after 5 seconds');
+                            clearInterval(checkInterval);
+                            resolve();
+                        }
+                    }, 50);
+                }
+            });
+        }
+
+        async function loadUserData() {
+            console.log('📊 DATA: Loading user data...');
+            
+            const userSession = localStorage.getItem('currentUser');
+            if (!userSession) {
+                console.warn('⚠️ DATA: No user session found');
+                return;
+            }
+            
+            const user = JSON.parse(userSession);
+            currentUser = user;
+            currentUserId = user.id;
+            window.currentUser = currentUser;
+            window.currentUserId = currentUserId;
+            
+            // ВАЖНО: Очищаем данные перед загрузкой для нового пользователя
+            completedTopics = [];
+            userQuizResults = {};
+            console.log('🧹 DATA: Cleared previous user data');
+            
+            console.log('📊 DATA: User identified:', user.email, 'ID:', user.id);
+            
+            // Ждем Firebase максимум 3 секунды
+            console.log('📊 DATA: Waiting for Firebase...');
+            await waitForFirebase();
+            console.log('📊 DATA: Firebase wait complete. Functions available:', {
+                getUserProgress: !!window.getUserProgress,
+                getUserQuizResults: !!window.getUserQuizResults,
+                saveUserProgress: !!window.saveUserProgress
+            });
+            
+            // Логируем посещение курса A1
+            if (window.logActivity) {
+                window.logActivity(
+                    currentUser.email, 
+                    `${currentUser.name} открыл курс A1 (Босхлангъич)`, 
+                    'course_visit'
+                ).then(() => {
+                    console.log('📊 DATA: Activity logged');
+                }).catch(error => {
+                    console.warn('⚠️ DATA: Could not log activity:', error);
+                });
+            }
+            
+            // Загружаем прогресс из Firebase
+            try {
+                if (window.getUserProgress && window.getUserQuizResults) {
+                    console.log('📊 DATA: Loading progress from Firebase for course A1...');
+                    const savedProgress = await window.getUserProgress(currentUserId, 'A2');
+                    console.log('📊 DATA: Received progress from Firebase:', savedProgress);
+                    
+                    if (savedProgress && savedProgress.completedTopics) {
+                        completedTopics = Array.isArray(savedProgress.completedTopics) ? savedProgress.completedTopics : [];
+                        console.log('✅ DATA: Progress loaded from Firebase:', completedTopics);
+                        // Сохраняем в localStorage как backup с привязкой к userId
+                        localStorage.setItem(`a2_progress_${currentUserId}`, JSON.stringify(completedTopics));
+                    } else {
+                        // Проверяем localStorage для ЭТОГО пользователя
+                        const localProgress = localStorage.getItem(`a2_progress_${currentUserId}`);
+                        if (localProgress) {
+                            completedTopics = JSON.parse(localProgress);
+                            console.log('📦 DATA: Progress loaded from localStorage for this user:', completedTopics);
+                            
+                            // Синхронизируем в Firebase
+                            if (completedTopics.length > 0 && window.saveUserProgress) {
+                                console.log('🔄 DATA: Syncing localStorage progress to Firebase...');
+                                await window.saveUserProgress(currentUserId, 'A2', {
+                                    completedTopics: completedTopics,
+                                    lastUpdated: new Date().toISOString()
+                                });
+                                console.log('✅ DATA: Progress synced to Firebase');
+                            }
+                        } else {
+                            // Новый пользователь - прогресс пустой
+                            completedTopics = [];
+                            console.log('🆕 DATA: New user - empty progress:', completedTopics);
+                        }
+                    }
+                    
+                    console.log('📊 DATA: Loading quiz results from Firebase...');
+                    userQuizResults = await window.getUserQuizResults(currentUserId, 'A2');
+                    console.log('📊 DATA: Received quiz results:', Object.keys(userQuizResults || {}).length, 'results');
+                    
+                    console.log('✅ DATA: User data loaded from Firebase:', { 
+                        completedTopics, 
+                        resultsCount: Object.keys(userQuizResults || {}).length 
+                    });
+                } else {
+                    console.log('⚠️ DATA: Firebase functions not available, using defaults');
+                    // Для нового пользователя всегда пустой прогресс если нет Firebase
+                    completedTopics = [];
+                }
+            } catch (error) {
+                console.error('❌ DATA: Error loading user data from Firebase:', error);
+                // Пытаемся загрузить из localStorage для ЭТОГО пользователя
+                const localProgress = localStorage.getItem(`a2_progress_${currentUserId}`);
+                completedTopics = localProgress ? JSON.parse(localProgress) : [];
+                console.log('📦 DATA: Using localStorage due to error:', completedTopics);
+            }
+        }
+
+        async function saveQuizResultToFirebase(topicId, quizData) {
+            if (window.currentUserId && window.saveQuizResult) {
+                try {
+                    await window.saveQuizResult(window.currentUserId, topicId, quizData, 'A2');
+                    console.log('✅ Quiz result saved to Firebase for course A1');
+                    return true;
+                } catch (error) {
+                    console.error('❌ Error saving to Firebase:', error);
+                    alert('Ошибка сохранения результата. Проверьте интернет-соединение.');
+                    return false;
+                }
+            } else {
+                console.error('❌ Cannot save: user not authenticated or Firebase not loaded');
+                alert('Ошибка: требуется авторизация');
+                return false;
+            }
+        }
+
+        async function saveProgressToFirebase() {
+            console.log('💾 SAVE: Attempting to save progress...', {
+                userId: window.currentUserId,
+                completed: completedTopics,
+                completedCount: completedTopics.length,
+                firebaseReady: window.firebaseReady,
+                saveUserProgressAvailable: !!window.saveUserProgress
+            });
+            
+            // Сначала всегда сохраняем в localStorage как backup с привязкой к userId
+            if (window.currentUserId) {
+                try {
+                    localStorage.setItem(`a2_progress_${window.currentUserId}`, JSON.stringify(completedTopics));
+                    console.log('✅ SAVE: Progress saved to localStorage for user', window.currentUserId);
+                } catch (e) {
+                    console.error('❌ SAVE: Could not save to localStorage:', e);
+                }
+            }
+            
+            if (!window.currentUserId) {
+                console.error('❌ SAVE: No user ID available, localStorage only');
+                return false;
+            }
+            
+            // Ждем Firebase если еще не готов
+            if (!window.saveUserProgress) {
+                console.log('⏳ SAVE: Firebase not ready, waiting...');
+                await waitForFirebase();
+            }
+            
+            if (window.saveUserProgress) {
+                try {
+                    console.log('💾 SAVE: Calling Firebase saveUserProgress for course A2...');
+                    console.log('💾 SAVE: Data to save:', {
+                        userId: window.currentUserId,
+                        course: 'A2',
+                        completedTopics: completedTopics,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    // Сохраняем прогресс для курса A2
+                    const result = await window.saveUserProgress(window.currentUserId, 'A2', {
+                        completedTopics: completedTopics,
+                        lastUpdated: new Date().toISOString()
+                    });
+                    
+                    console.log('✅ SAVE: Progress saved to Firebase successfully!', {
+                        result,
+                        userId: window.currentUserId,
+                        course: 'A2',
+                        completedTopics: completedTopics,
+                        completedCount: completedTopics.length
+                    });
+                    
+                    // Verify save
+                    if (window.getUserProgress) {
+                        const verified = await window.getUserProgress(window.currentUserId, 'A2');
+                        console.log('🔍 SAVE: Verification check:', verified);
+                        if (verified && verified.completedTopics) {
+                            console.log('✅ SAVE: Verified - data is in Firebase:', verified.completedTopics);
+                        } else {
+                            console.warn('⚠️ SAVE: Verification failed - data may not be saved');
+                        }
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('❌ SAVE ERROR:', error);
+                    console.error('❌ SAVE ERROR Details:', {
+                        message: error.message,
+                        stack: error.stack,
+                        userId: window.currentUserId,
+                        completedTopics
+                    });
+                    return false;
+                }
+            } else {
+                console.error('❌ SAVE: Firebase not ready after waiting, localStorage only');
+                return false;
+            }
+        }
+
+        // DOM elements
+        const topicsContainer = document.getElementById('topicsContainer');
+        const lessonContent = document.getElementById('lessonContent');
+        const quizSection = document.getElementById('quizSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const progressPercent = document.getElementById('progressPercent');
+        const progressFill = document.getElementById('progressFill');
+        const completeBtn = document.getElementById('completeBtn');
+        const retryBtn = document.getElementById('retryBtn');
+
+        // Update loading screen text
+        function updateLoadingText(text) {
+            const loadingText = document.querySelector('.loading-text');
+            if (loadingText) {
+                // Remove "Yuklanmoqda" and dots, just show our custom text
+                loadingText.innerHTML = text + '<span class="loading-dots"></span>';
+            }
+        }
+
+        // Hide loading screen
+        function hideLoadingScreen() {
+            console.log('🔄 Hiding loading screen...');
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                console.log('✅ Loading screen element found, hiding...');
+                loadingScreen.classList.add('hidden');
+                // Remove from DOM after animation
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    console.log('✅ Loading screen hidden completely');
+                }, 500);
+            } else {
+                console.warn('⚠️ Loading screen element not found!');
+            }
+        }
+
+        // Initialize the page
+        async function initPage() {
+            console.log('✅ INIT: Starting page initialization...');
+            const startTime = Date.now();
+            
+            try {
+                // Проверка авторизации
+                updateLoadingText('Foydalanuvchi tekshirilmoqda');
+                console.log('✅ INIT: Checking authentication...');
+                await new Promise(resolve => setTimeout(resolve, 300)); // Small delay for smooth UX
+                
+                const userSession = localStorage.getItem('currentUser');
+                if (!userSession) {
+                    console.warn('⚠️ INIT: User not authenticated, redirecting...');
+                    hideLoadingScreen();
+                    window.location.href = 'auth.html?redirect=a2-demo.html';
+                    return;
+                }
+                
+                // Загрузка данных из Firebase
+                updateLoadingText('Ma\'lumotlar yuklanmoqda');
+                console.log('✅ INIT: User found, loading data from Firebase...');
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                // Ждем полной загрузки данных из Firebase
+                await loadUserData();
+                
+                console.log('✅ INIT: Data loaded, completedTopics:', completedTopics);
+                
+                // Загрузка материалов курса
+                updateLoadingText('Kurs materiallari tayyorlanmoqda');
+                console.log('✅ INIT: Preparing course materials...');
+                await new Promise(resolve => setTimeout(resolve, 400));
+                
+                // Отрисовка интерфейса
+                updateLoadingText('Interfeys yaratilmoqda');
+                console.log('✅ INIT: Rendering interface with correct progress...');
+                loadTopics();
+                updateProgress();
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                // Финализация
+                updateLoadingText('Tayyor');
+                console.log('✅ INIT: Finalizing...');
+                await new Promise(resolve => setTimeout(resolve, 200));
+                
+                const totalTime = Date.now() - startTime;
+                console.log(`✅ INIT: Complete! Total loading time: ${totalTime}ms`);
+                
+                // Скрываем экран загрузки
+                hideLoadingScreen();
+                
+            } catch (error) {
+                console.error('❌ INIT ERROR:', error);
+                updateLoadingText('Xatolik yuz berdi');
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Показываем страницу даже при ошибке
+                loadTopics();
+                updateProgress();
+                hideLoadingScreen();
+            }
+
+            // Navigation burger menu
+            const burger = document.querySelector('.burger');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (burger && navLinks) {
+                burger.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (navLinks) {
+                        navLinks.classList.remove('active');
+                    }
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Retry button functionality
+            if (retryBtn) {
+                retryBtn.addEventListener('click', () => {
+                    document.querySelectorAll('.quiz-option.selected').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    document.querySelectorAll('input[data-blank]').forEach(input => {
+                        input.value = '';
+                    });
+                    if (resultsSection) {
+                        resultsSection.classList.remove('show');
+                    }
+                    if (completeBtn) {
+                        completeBtn.style.display = 'none';
+                    }
+                    retryBtn.style.display = 'none';
+                });
+            }
+        }
+
+        // Load topics into the grid
+        function loadTopics() {
+            console.log('📚 TOPICS: Loading topics with progress:', completedTopics);
+            
+            topicsContainer.innerHTML = '';
+            courseData.topics.forEach(topic => {
+                const topicBtn = document.createElement('button');
+                topicBtn.className = 'topic-btn';
+
+                // Проверяем, доступна ли тема (последовательность)
+                const isSequenceLocked = !completedTopics.includes(topic.id - 1) && topic.id > 1;
+                
+                console.log(`📚 TOPICS: Topic ${topic.id} - Completed: ${completedTopics.includes(topic.id)}, SequenceLocked: ${isSequenceLocked}`);
+
+                if (topic.isSubscriptionLocked || topic.id >= 4) {
+                    // Для тем с 4-й и выше (закрытых по подписке)
+                    topicBtn.classList.add('locked');
+                    topicBtn.innerHTML = `
+                        <i class="fas fa-lock topic-icon"></i>
+                        <div class="topic-info">
+                            <div class="topic-title">${topic.id}. ${topic.title}</div>
+                            <div class="topic-desc">${topic.description}</div>
+                        </div>
+                        <div class="locked-overlay">
+                            <i class="fas fa-crown"></i>
+                            <div>Faqat obuna uchun</div>
+                            <small>Obuna bo'lish orqali oching</small>
+                        </div>
+                    `;
+                    topicBtn.addEventListener('click', () => {
+                        alert("Ushbu mavzuni ochish uchun to'liq kursga obuna bo'ling!");
+                        document.getElementById('subscription').scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    });
+                } else if (isSequenceLocked) {
+                    // Для тем, которые заблокированы из-за последовательности
+                    topicBtn.classList.add('sequence-locked');
+                    topicBtn.innerHTML = `
+                        <i class="fas fa-forward topic-icon"></i>
+                        <div class="topic-info">
+                            <div class="topic-title">${topic.id}. ${topic.title}</div>
+                            <div class="topic-desc">${topic.description}</div>
+                            <small style="color: var(--error); margin-top: 5px; display: block;">
+                                <i class="fas fa-lock"></i> Avval ${topic.id - 1}-mavzuni tugating
+                            </small>
+                        </div>
+                    `;
+                    topicBtn.addEventListener('click', () => {
+                        alert(`Ushbu mavzuni ochish uchun avval ${topic.id - 1}-mavzuni tugatishingiz kerak!`);
+                        // Перейти к предыдущей теме
+                        const prevTopic = courseData.topics.find(t => t.id === topic.id - 1);
+                        if (prevTopic) {
+                            currentTopicId = prevTopic.id;
+                            loadLesson(currentTopicId);
+                            loadTopics();
+                            document.getElementById('lesson').scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                } else {
+                    // Для доступных тем
+                    if (completedTopics.includes(topic.id)) {
+                        topicBtn.classList.add('completed');
+                    }
+                    if (topic.id === currentTopicId) {
+                        topicBtn.classList.add('active');
+                    }
+
+                    topicBtn.innerHTML = `
+                        <i class="fas fa-book topic-icon"></i>
+                        <div class="topic-info">
+                            <div class="topic-title">${topic.id}. ${topic.title}</div>
+                            <div class="topic-desc">${topic.description}</div>
+                            ${topic.id <= 3 ? '<small style="color: var(--success); margin-top: 5px; display: block;"><i class="fas fa-unlock"></i> Bepul</small>' : ''}
+                            ${topic.id <= 3 ? `<button onclick="event.stopPropagation(); window.location.href='a2-demo-vocabulary.html?topic=${topic.id}'" style="margin-top: 10px; background: linear-gradient(135deg, var(--blue), #1976D2); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease;"><i class="fas fa-book-open"></i> Lug'atni o'rganish</button>` : ''}
+                        </div>
+                    `;
+
+                    topicBtn.addEventListener('click', () => {
+                        // Проверяем, завершена ли предыдущая тема
+                        if (topic.id > 1 && !completedTopics.includes(topic.id - 1)) {
+                            alert(`Ushbu mavzuni ochish uchun avval ${topic.id - 1}-mavzuni tugatishingiz kerak!`);
+                            return;
+                        }
+
+                        currentTopicId = topic.id;
+                        loadLesson(currentTopicId);
+                        loadTopics(); // Refresh to update active state
+                        document.getElementById('lesson').scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    });
+                }
+
+                topicsContainer.appendChild(topicBtn);
+            });
+        }
+
+        // Load lesson content
+        function loadLesson(topicId) {
+            const topic = courseData.topics.find(t => t.id === topicId);
+            if (!topic) return;
+            
+            // Логируем открытие темы
+            if (currentUser && window.logActivity) {
+                window.logActivity(
+                    currentUser.email,
+                    `${currentUser.name} открыл тему ${topicId}: "${topic.title}" в курсе A1`,
+                    'course_visit'
+                ).catch(err => console.error('❌ Error logging topic visit:', err));
+            }
+
+            let lessonHTML = `
+                <div class="lesson-content active">
+                    <h3 class="lesson-title">${topic.id}. ${topic.title}</h3>
+            `;
+
+            if (!topic.isSubscriptionLocked) {
+                lessonHTML += `
+                    <div class="grammar-section">
+                        <div class="grammar-header">
+                            <i class="fas fa-language"></i>
+                            <h3>Grammatik qism</h3>
+                        </div>
+                        <div class="grammar-content">
+                            ${topic.grammar}
+                        </div>
+                    </div>
+                    
+                    <div class="topic-explanation">
+                        <h3>Mavzu Tushuntirish</h3>
+                        <p>${topic.explanation.uz}</p>
+                        ${topic.content}
+                    </div>
+                `;
+            } else {
+                lessonHTML += topic.content + '</div>';
+            }
+
+            lessonContent.innerHTML = lessonHTML;
+
+            if (!topic.isSubscriptionLocked) {
+                loadQuiz(topicId);
+            } else {
+                quizSection.innerHTML = '';
+            }
+        }
+
+        // Load quiz content
+        function loadQuiz(topicId) {
+            const topic = courseData.topics.find(t => t.id === topicId);
+            if (!topic || topic.isSubscriptionLocked) return;
+
+            // Загружаем сохраненные результаты из глобальной переменной (уже загружены из Firebase)
+            const topicResults = userQuizResults[`topic_${topicId}`];
+
+            let quizHTML = `
+                <h3 class="quiz-title">Test: ${topic.title}</h3>
+                <div class="quiz-container">
+            `;
+
+            // Multiple choice questions
+            topic.quiz.mcQuestions.forEach((question, index) => {
+                quizHTML += `
+                    <div class="quiz-question">
+                        <span class="question-number">${index + 1}</span>
+                        <div class="question-text">${question}</div>
+                        <div class="quiz-options" data-question="${index}">
+                            ${topic.quiz.mcOptions[index].map((option, optIndex) =>
+                    `<div class="quiz-option" data-option="${optIndex}">${option}</div>`
+                ).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Fill-in-the-blank questions
+            if (topic.quiz.blankQuestions && topic.quiz.blankQuestions.length > 0) {
+                quizHTML += `
+                    <div class="quiz-question">
+                        <span class="question-number">${topic.quiz.mcQuestions.length + 1}</span>
+                        <div class="question-text">Bo'sh joylarni to'ldiring:</div>
+                        <div class="fill-blank-container">
+                `;
+                
+                topic.quiz.blankQuestions.forEach((question, index) => {
+                    quizHTML += `
+                        <div class="fill-blank">
+                            <span>${question}</span>
+                            <input type="text" data-blank="${index}" placeholder="...">
+                        </div>
+                    `;
+                });
+                
+                quizHTML += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            quizHTML += `
+                </div>
+                <button class="submit-btn" id="submitQuiz">Javoblarni tekshirish</button>
+            `;
+
+            quizSection.innerHTML = quizHTML;
+
+            // Add event listeners to quiz options
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function () {
+                    const questionContainer = this.closest('.quiz-options');
+                    const allOptions = questionContainer.querySelectorAll('.quiz-option');
+                    allOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // Submit button event listener
+            document.getElementById('submitQuiz').addEventListener('click', async () => {
+                await checkAnswers(topicId);
+            });
+            
+            // Если есть сохраненные результаты, показываем их
+            if (topicResults) {
+                setTimeout(() => {
+                    displaySavedResults(topic, topicResults, topicId);
+                }, 300);
+            }
+
+            // Load extra exercises for topic 3
+            if (topicId === 3) {
+                setTimeout(() => {
+                    loadExtraExercises(topicId);
+                }, 100);
+            }
+        }
+        
+        // Показ сохраненных результатов
+        function displaySavedResults(topic, topicResults, topicId) {
+            const totalQuestions = topic.quiz.mcQuestions.length + topic.quiz.blankQuestions.length;
+            const percentage = Math.round((topicResults.score / totalQuestions) * 100);
+            
+            document.getElementById('scoreDisplay').textContent = `Sizning natijangiz: ${topicResults.score}/${totalQuestions}`;
+            
+            if (percentage >= 90) {
+                document.getElementById('resultsMessage').innerHTML = 'Ajoyib natija! Siz mavzuni mukammal o\'zlashtirdingiz.';
+            } else if (percentage >= 70) {
+                document.getElementById('resultsMessage').innerHTML = 'Yaxshi natija! Siz mavzuni yaxshi tushundingiz.';
+            } else if (percentage >= 50) {
+                document.getElementById('resultsMessage').innerHTML = 'Qoniqarli. Mavzuni takrorlab, testni qayta topshiring.';
+            } else {
+                document.getElementById('resultsMessage').innerHTML = 'Mavzuni qayta o\'rganib chiqishingiz kerak.';
+            }
+            
+            // Показываем correct answers
+            const correctAnswers = document.getElementById('correctAnswers');
+            correctAnswers.innerHTML = '<h3>To\'g\'ri javoblar:</h3>';
+            
+            // MC answers
+            topic.quiz.mcQuestions.forEach((question, index) => {
+                const userAnswer = topicResults.mcAnswers[index];
+                const correctAnswer = topic.quiz.mcAnswers[index];
+                const isCorrect = userAnswer === correctAnswer;
+                
+                const answerItem = document.createElement('div');
+                answerItem.className = `answer-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                answerItem.innerHTML = `
+                    <span class="answer-status">${isCorrect ? '✓' : '✗'}</span>
+                    <strong>Savol ${index + 1}:</strong> ${question}<br>
+                    Sizning javobingiz: "${userAnswer >= 0 ? topic.quiz.mcOptions[index][userAnswer] : '(javob berilmagan)'}"<br>
+                    To'g'ri javob: "${topic.quiz.mcOptions[index][correctAnswer]}"
+                `;
+                correctAnswers.appendChild(answerItem);
+            });
+            
+            // Blank answers
+            topic.quiz.blankQuestions.forEach((question, index) => {
+                const userAnswer = topicResults.blankAnswers[index] || '';
+                const correctAnswer = topic.quiz.blankAnswers[index];
+                const isCorrect = userAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
+                
+                const answerItem = document.createElement('div');
+                answerItem.className = `answer-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                answerItem.innerHTML = `
+                    <span class="answer-status">${isCorrect ? '✓' : '✗'}</span>
+                    <strong>Savol ${index + topic.quiz.mcQuestions.length + 1}:</strong> ${question}<br>
+                    Sizning javobingiz: "${userAnswer || '(javob berilmagan)'}"<br>
+                    To'g'ri javob: "${correctAnswer}"
+                `;
+                correctAnswers.appendChild(answerItem);
+            });
+            
+            resultsSection.classList.add('show');
+            
+            // Buttons
+            if (topicResults.score >= PASSING_SCORE) {
+                completeBtn.textContent = 'Mavzuni tugatish';
+                completeBtn.className = 'complete-btn';
+                completeBtn.style.display = 'block';
+                retryBtn.style.display = 'none';
+            } else {
+                completeBtn.textContent = 'Mavzu tugatilmadi';
+                completeBtn.className = 'complete-btn failed';
+                completeBtn.style.display = 'block';
+                retryBtn.style.display = 'block';
+            }
+        }
+
+        // ==================== EXTRA EXERCISES FUNCTIONS ====================
+        
+        // Load extra exercises for topic 3
+        function loadExtraExercises(topicId) {
+            const topic = courseData.topics.find(t => t.id === topicId);
+            if (!topic || !topic.extraExercises || topic.id !== 3) return;
+
+            // Загружаем сохраненные результаты упражнений
+            const savedExercises = userQuizResults[`topic_${topicId}_exercises`] || {};
+
+            let exercisesHTML = `
+                <div class="extra-exercises-section" id="extraExercises">
+                    <h2 class="extra-exercises-title">
+                        <i class="fas fa-pencil-alt"></i> Grammatik mashq: Olmosh
+                    </h2>
+                    
+                    <div class="exercise-tabs">
+                        <button class="exercise-tab active" onclick="switchExerciseTab('section1', this)">
+                            <img src="images/lessons imgs/IMG_4634.PNG" alt="мой/моя/моё/мои">
+                            <span>${topic.extraExercises.section1.title}</span>
+                        </button>
+                        <button class="exercise-tab" onclick="switchExerciseTab('section2', this)">
+                            <img src="images/lessons imgs/IMG_4635.PNG" alt="твой/твоя/твоё/твои">
+                            <span>${topic.extraExercises.section2.title}</span>
+                        </button>
+                        <button class="exercise-tab" onclick="switchExerciseTab('section3', this)">
+                            <img src="images/lessons imgs/IMG_4636.PNG" alt="наш/наша/наше/наши">
+                            <span>${topic.extraExercises.section3.title}</span>
+                        </button>
+                        <button class="exercise-tab" onclick="switchExerciseTab('section4', this)">
+                            <img src="images/lessons imgs/IMG_4637.PNG" alt="ваш/ваша/ваше/ваши">
+                            <span>${topic.extraExercises.section4.title}</span>
+                        </button>
+                    </div>
+            `;
+
+            // Generate sections
+            Object.keys(topic.extraExercises).forEach((sectionKey, sectionIndex) => {
+                const section = topic.extraExercises[sectionKey];
+                const isActive = sectionIndex === 0 ? 'active' : '';
+                const savedAnswers = savedExercises[sectionKey] || [];
+
+                exercisesHTML += `
+                    <div class="exercise-content ${isActive}" id="${sectionKey}">
+                        <div class="exercise-grid">
+                `;
+
+                section.questions.forEach((question, qIndex) => {
+                    const parts = question.split('…');
+                    const savedAnswer = savedAnswers[qIndex] || '';
+                    let inputClass = '';
+                    
+                    if (savedAnswer) {
+                        // Normalize answers for comparison
+                        const normalizedSaved = savedAnswer.toLowerCase().replace(/ё/g, 'е');
+                        const normalizedCorrect = section.answers[qIndex].toLowerCase().replace(/ё/g, 'е');
+                        inputClass = normalizedSaved === normalizedCorrect ? 'correct' : 'incorrect';
+                    }
+
+                    exercisesHTML += `
+                        <div class="exercise-item">
+                            <span>${parts[0]}</span>
+                            <input type="text" 
+                                   class="exercise-input ${inputClass}" 
+                                   data-section="${sectionKey}" 
+                                   data-index="${qIndex}"
+                                   value="${savedAnswer}"
+                                   placeholder="...">
+                            <span>${parts[1] || ''}</span>
+                        </div>
+                    `;
+                });
+
+                exercisesHTML += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            exercisesHTML += `
+                    <button class="check-exercises-btn" onclick="checkExtraExercises(${topicId})">
+                        <i class="fas fa-check-circle"></i> Javoblarni Tekshirish
+                    </button>
+                    
+                    <div class="exercise-results" id="exerciseResults">
+                        <div class="exercise-score" id="exerciseScore"></div>
+                    </div>
+                </div>
+            `;
+
+            // Insert after quiz section
+            const quizSection = document.getElementById('quizSection');
+            if (quizSection) {
+                const existingExercises = document.getElementById('extraExercises');
+                if (existingExercises) {
+                    existingExercises.remove();
+                }
+                quizSection.insertAdjacentHTML('afterend', exercisesHTML);
+                
+                // Add auto-save on input change
+                document.querySelectorAll('.exercise-input').forEach(input => {
+                    input.addEventListener('input', debounce(async function() {
+                        await autoSaveExercises(topicId);
+                    }, 1000));
+                });
+            }
+        }
+
+        // Debounce helper function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Auto-save exercises
+        async function autoSaveExercises(topicId) {
+            const topic = courseData.topics.find(t => t.id === topicId);
+            if (!topic || !topic.extraExercises) return;
+
+            const exerciseAnswers = {};
+            Object.keys(topic.extraExercises).forEach(sectionKey => {
+                const section = topic.extraExercises[sectionKey];
+                const sectionAnswers = [];
+
+                section.questions.forEach((question, index) => {
+                    const input = document.querySelector(`input[data-section="${sectionKey}"][data-index="${index}"]`);
+                    if (input) {
+                        sectionAnswers.push(input.value.trim());
+                    }
+                });
+
+                exerciseAnswers[sectionKey] = sectionAnswers;
+            });
+
+            // Save to Firebase without checking
+            const exerciseData = {
+                ...exerciseAnswers,
+                timestamp: new Date().toISOString(),
+                autoSaved: true
+            };
+
+            await saveQuizResultToFirebase(`${topicId}_exercises`, exerciseData);
+            userQuizResults[`topic_${topicId}_exercises`] = exerciseData;
+        }
+
+        // Switch between exercise tabs
+        window.switchExerciseTab = function(sectionKey, clickedTab) {
+            // Update tab buttons
+            document.querySelectorAll('.exercise-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            clickedTab.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.exercise-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(sectionKey).classList.add('active');
+
+            // Auto-scroll to exercises section
+            setTimeout(() => {
+                const exerciseContent = document.getElementById(sectionKey);
+                if (exerciseContent) {
+                    exerciseContent.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start'
+                    });
+                }
+            }, 100);
+        };
+
+        // Check extra exercises answers
+        window.checkExtraExercises = async function(topicId) {
+            const topic = courseData.topics.find(t => t.id === topicId);
+            if (!topic || !topic.extraExercises) return;
+
+            let totalCorrect = 0;
+            let totalQuestions = 0;
+            const exerciseAnswers = {};
+
+            Object.keys(topic.extraExercises).forEach(sectionKey => {
+                const section = topic.extraExercises[sectionKey];
+                const sectionAnswers = [];
+
+                section.questions.forEach((question, index) => {
+                    const input = document.querySelector(`input[data-section="${sectionKey}"][data-index="${index}"]`);
+                    if (input) {
+                        const userAnswer = input.value.trim();
+                        const correctAnswer = section.answers[index];
+                        
+                        sectionAnswers.push(userAnswer);
+                        totalQuestions++;
+
+                        // Remove previous classes
+                        input.classList.remove('correct', 'incorrect');
+
+                        // Normalize answers: replace ё with е for comparison
+                        const normalizedUser = userAnswer.toLowerCase().replace(/ё/g, 'е');
+                        const normalizedCorrect = correctAnswer.toLowerCase().replace(/ё/g, 'е');
+
+                        if (normalizedUser === normalizedCorrect) {
+                            input.classList.add('correct');
+                            totalCorrect++;
+                        } else if (userAnswer) {
+                            input.classList.add('incorrect');
+                        }
+                    }
+                });
+
+                exerciseAnswers[sectionKey] = sectionAnswers;
+            });
+
+            // Save results to Firebase
+            const exerciseData = {
+                ...exerciseAnswers,
+                score: totalCorrect,
+                total: totalQuestions,
+                timestamp: new Date().toISOString()
+            };
+
+            await saveQuizResultToFirebase(`${topicId}_exercises`, exerciseData);
+            userQuizResults[`topic_${topicId}_exercises`] = exerciseData;
+
+            // Show results
+            const percentage = Math.round((totalCorrect / totalQuestions) * 100);
+            const resultsDiv = document.getElementById('exerciseResults');
+            const scoreDiv = document.getElementById('exerciseScore');
+
+            let message = '';
+            if (percentage >= 90) {
+                message = '🎉 Ajoyib! Siz mashqlarni mukammal bajardingiz!';
+            } else if (percentage >= 70) {
+                message = '👍 Yaxshi natija! Ko\'proq mashq qiling.';
+            } else if (percentage >= 50) {
+                message = '📝 Qoniqarli. Mavzuni qayta ko\'rib chiqing.';
+            } else {
+                message = '📚 Mavzuni qayta o\'rganing va urinib ko\'ring.';
+            }
+
+            scoreDiv.innerHTML = `
+                <div style="font-size: 2rem; margin-bottom: 10px;">${totalCorrect}/${totalQuestions}</div>
+                <div style="font-size: 1.2rem; color: var(--primary-dark);">${percentage}%</div>
+                <p style="margin-top: 15px; font-size: 1.1rem;">${message}</p>
+            `;
+
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        };
+
+        // Check answers and show results
+        async function checkAnswers(topicId) {
+            const topic = courseData.topics.find(t => t.id === topicId);
+            if (!topic || topic.isSubscriptionLocked) return;
+
+            let score = 0;
+            const totalQuestions = topic.quiz.mcQuestions.length + topic.quiz.blankQuestions.length;
+            const userAnswers = {
+                mcAnswers: [],
+                blankAnswers: [],
+                score: 0,
+                timestamp: new Date().toISOString()
+            };
+
+            // Check multiple choice answers
+            topic.quiz.mcAnswers.forEach((correctAnswer, index) => {
+                const selectedOption = document.querySelector(`.quiz-options[data-question="${index}"] .quiz-option.selected`);
+                const userAnswer = selectedOption ? parseInt(selectedOption.getAttribute('data-option')) : -1;
+                userAnswers.mcAnswers.push(userAnswer);
+                
+                // Визуализация
+                const allOptions = document.querySelectorAll(`.quiz-options[data-question="${index}"] .quiz-option`);
+                allOptions.forEach((opt, optIndex) => {
+                    if (optIndex === correctAnswer) {
+                        opt.classList.add('correct-answer');
+                    }
+                    if (userAnswer === optIndex && optIndex !== correctAnswer) {
+                        opt.classList.add('wrong-answer');
+                    }
+                });
+                
+                if (selectedOption) {
+                    const selectedValue = parseInt(selectedOption.getAttribute('data-option'));
+                    if (selectedValue === correctAnswer) {
+                        score++;
+                    }
+                }
+            });
+
+            // Check fill-in-the-blank answers
+            topic.quiz.blankAnswers.forEach((correctAnswer, index) => {
+                const input = document.querySelector(`input[data-blank="${index}"]`);
+                const userAnswer = input && input.value.trim() ? input.value.trim() : '';
+                userAnswers.blankAnswers.push(userAnswer);
+                
+                // Визуализация
+                if (input) {
+                    const userAnswerLower = userAnswer.toLowerCase();
+                    const correctAnswerLower = correctAnswer.toLowerCase();
+                    if (userAnswerLower === correctAnswerLower) {
+                        input.classList.add('correct-answer');
+                        score++;
+                    } else if (userAnswer) {
+                        input.classList.add('wrong-answer');
+                    }
+                }
+            });
+
+            currentScore = score;
+            userAnswers.score = score;
+            
+            // Сохраняем результаты в Firebase (или localStorage как fallback)
+            await saveQuizResultToFirebase(topicId, userAnswers);
+            
+            // Обновляем локальный кеш
+            userQuizResults[`topic_${topicId}`] = userAnswers;
+            
+            // Логируем прохождение теста
+            if (currentUser && window.logActivity) {
+                const topicTitle = topic.title;
+                const result = score >= PASSING_SCORE ? 'успешно прошел' : 'не прошел';
+                window.logActivity(
+                    currentUser.email,
+                    `${currentUser.name} ${result} тест темы ${topicId}: "${topicTitle}" (Результат: ${score}/${totalQuestions})`,
+                    'course_visit'
+                ).catch(err => console.error('❌ Error logging quiz result:', err));
+            }
+
+            // Calculate percentage
+            const percentage = Math.round((score / totalQuestions) * 100);
+
+            // Update results display
+            document.getElementById('scoreDisplay').textContent = `Sizning natijangiz: ${score}/${totalQuestions}`;
+
+            if (percentage >= 90) {
+                document.getElementById('resultsMessage').innerHTML = 'Ajoyib natija! Siz mavzuni mukammal o\'zlashtirdingiz.';
+            } else if (percentage >= 70) {
+                document.getElementById('resultsMessage').innerHTML = 'Yaxshi natija! Siz mavzuni yaxshi tushundingiz.';
+            } else if (percentage >= 50) {
+                document.getElementById('resultsMessage').innerHTML = 'Qoniqarli. Mavzuni takrorlab, testni qayta topshiring.';
+            } else {
+                document.getElementById('resultsMessage').innerHTML = 'Ko\'proq mashq qiling. Mavzuni diqqat bilan o\'qib chiqing.';
+            }
+
+            // Show correct answers
+            const correctAnswers = document.getElementById('correctAnswers');
+            correctAnswers.innerHTML = '<h3>To\'g\'ri javoblar:</h3>';
+
+            // Multiple choice answers
+            topic.quiz.mcQuestions.forEach((question, index) => {
+                const selectedOption = document.querySelector(`.quiz-options[data-question="${index}"] .quiz-option.selected`);
+                const userAnswer = selectedOption ? topic.quiz.mcOptions[index][parseInt(selectedOption.getAttribute('data-option'))] : 'Tanlanmagan';
+                const correctAnswer = topic.quiz.mcOptions[index][topic.quiz.mcAnswers[index]];
+                const isCorrect = userAnswer === correctAnswer;
+
+                const answerItem = document.createElement('div');
+                answerItem.className = `answer-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                answerItem.innerHTML = `
+                    <span class="answer-status">${isCorrect ? '✓' : '✗'}</span>
+                    <strong>Savol ${index + 1}:</strong> ${question}<br>
+                    Sizning javobingiz: ${userAnswer}<br>
+                    To'g'ri javob: ${correctAnswer}
+                `;
+                correctAnswers.appendChild(answerItem);
+            });
+
+            // Fill-in-the-blank answers
+            topic.quiz.blankQuestions.forEach((question, index) => {
+                const input = document.querySelector(`input[data-blank="${index}"]`);
+                const userAnswer = input ? input.value.trim() : '';
+                const correctAnswer = topic.quiz.blankAnswers[index];
+                const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+
+                const answerItem = document.createElement('div');
+                answerItem.className = `answer-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                answerItem.innerHTML = `
+                    <span class="answer-status">${isCorrect ? '✓' : '✗'}</span>
+                    <strong>Savol ${index + topic.quiz.mcQuestions.length + 1}:</strong> ${question}<br>
+                    Sizning javobingiz: "${userAnswer}"<br>
+                    To'g'ri javob: "${correctAnswer}"
+                `;
+                correctAnswers.appendChild(answerItem);
+            });
+
+            // Show results section
+            resultsSection.classList.add('show');
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Show appropriate buttons based on score
+            if (score >= PASSING_SCORE) {
+                completeBtn.textContent = 'Mavzuni tugatish';
+                completeBtn.className = 'complete-btn';
+                completeBtn.style.display = 'block';
+                retryBtn.style.display = 'none';
+
+                completeBtn.onclick = async () => {
+                    console.log('🔘 BUTTON CLICKED: Complete button clicked!', {
+                        topicId,
+                        alreadyCompleted: completedTopics.includes(topicId),
+                        currentCompleted: completedTopics
+                    });
+                    
+                    if (!completedTopics.includes(topicId)) {
+                        console.log('✅ COMPLETING: Adding topic to completed list...', topicId);
+                        completedTopics.push(topicId);
+                        
+                        // Сохраняем прогресс в Firebase
+                        console.log('💾 SAVING: Calling saveProgressToFirebase...');
+                        const saved = await saveProgressToFirebase();
+                        console.log('💾 SAVE RESULT:', saved ? 'SUCCESS' : 'FAILED');
+                        
+                        updateProgress();
+                        loadTopics(); // Refresh to show checkmark
+                        
+                        // Логируем завершение темы
+                        console.log('📊 LOGGING: Recording activity...');
+                        if (currentUser && window.logActivity) {
+                            window.logActivity(
+                                currentUser.email,
+                                `${currentUser.name} завершил тему ${topicId}: "${topic.title}" в курсе A1`,
+                                'course_visit'
+                            ).catch(err => console.error('❌ Error logging topic completion:', err));
+                        }
+
+                        // Auto-unlock next topic if it's not subscription locked
+                        console.log('🔓 UNLOCK: Checking next topic unlock...', { topicId });
+                        if (topicId < 3) {
+                            setTimeout(() => {
+                                console.log('🎉 ALERT: Showing completion message for topic', topicId);
+                                alert('Tabriklaymiz! ' + topicId + '-mavzuni muvaffaqiyatli tugatdingiz. Endi ' + (topicId + 1) + '-mavzuni o\'rganishingiz mumkin.');
+                            }, 300);
+                        } else if (topicId === 3) {
+                            setTimeout(() => {
+                                console.log('🎉 ALERT: Showing all free topics completed message');
+                                alert('Tabriklaymiz! Barcha bepul mavzularni tugatdingiz. Keyingi 13 ta mavzuni ochish uchun obuna bo\'ling!');
+                            }, 300);
+                        }
+                    } else {
+                        console.log('ℹ️ SKIPPED: Topic already completed', topicId);
+                    }
+                    
+                    console.log('🔄 CLOSING: Hiding results and scrolling to topics...');
+                    resultsSection.classList.remove('show');
+                    
+                    // Прокрутка к темам
+                    document.getElementById('topics').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                };
+            } else {
+                completeBtn.textContent = 'Mavzu tugatilmadi';
+                completeBtn.className = 'complete-btn failed';
+                completeBtn.style.display = 'block';
+                retryBtn.style.display = 'block';
+
+                completeBtn.onclick = () => {
+                    alert('Mavzuni tugatish uchun kamida ' + PASSING_SCORE + ' ta to\'g\'ri javob berishingiz kerak.');
+                };
+            }
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            // Only count non-locked topics for progress calculation
+            const freeTopics = courseData.topics.filter(topic => !topic.isSubscriptionLocked && topic.id <= 3);
+            const completedFreeTopics = completedTopics.filter(id => {
+                const topic = courseData.topics.find(t => t.id === id);
+                return topic && !topic.isSubscriptionLocked && topic.id <= 3;
+            });
+
+            const progress = (completedFreeTopics.length / freeTopics.length) * 100;
+            progressPercent.textContent = `${Math.round(progress)}%`;
+            progressFill.style.width = `${progress}%`;
+            
+            console.log('📊 PROGRESS UPDATED:', {
+                completedTopics: completedTopics,
+                completedCount: completedTopics.length,
+                freeTopicsCount: freeTopics.length,
+                completedFreeCount: completedFreeTopics.length,
+                progressPercent: Math.round(progress) + '%'
+            });
+        }
+
+        // Subscription function
+        function subscribeNow() {
+            alert('Obuna bo\'lish sahifasiga yo\'naltirilmoqda...\n\nTo\'liq kurs narxi: 199,000 so\'m/oy\nYillik obuna: 1,990,000 so\'m (2 oy bepul)\n\nBu demo versiya, haqiqiy to\'lov tizimi integratsiya qilinishi kerak.');
+        }
+
+        // ==================== DEVELOPER TOOLS ====================
+        // Команда для разблокировки всех уроков (только для локального тестирования)
+        window.unlockAllLessons = function() {
+            console.log('🔓 Разблокировка всех уроков...');
+            
+            // Разблокируем все темы
+            courseData.topics.forEach(topic => {
+                topic.isLocked = false;
+                topic.isSubscriptionLocked = false;
+            });
+            
+            // Перезагружаем топики на странице
+            loadTopics();
+            
+            console.log('✅ Все 12 уроков разблокированы!');
+            console.log('📚 Теперь можете открывать любой урок для проверки');
+            alert('🎓 Все уроки разблокированы!\n\nТеперь вы можете открыть любую тему для проверки.');
+            
+            return 'Все уроки разблокированы!';
+        };
+
+        // Команда для блокировки уроков обратно
+        window.lockLessons = function() {
+            console.log('🔒 Возврат блокировки уроков...');
+            
+            // Блокируем темы 4-12
+            courseData.topics.forEach(topic => {
+                if (topic.id >= 4) {
+                    topic.isLocked = true;
+                    topic.isSubscriptionLocked = true;
+                }
+            });
+            
+            // Перезагружаем топики
+            loadTopics();
+            
+            console.log('✅ Уроки 4-12 заблокированы обратно');
+            alert('🔒 Блокировка восстановлена!\n\nУроки 4-12 снова заблокированы.');
+            
+            return 'Блокировка восстановлена!';
+        };
+
+        // Вывод подсказки в консоль при загрузке
+        console.log('%c🎓 DEVELOPER COMMANDS 🎓', 'background: #FF9800; color: white; padding: 8px 15px; font-size: 16px; font-weight: bold; border-radius: 4px;');
+        console.log('%cДля разблокировки всех 12 уроков введите:', 'color: #2196F3; font-weight: bold; margin-top: 10px;');
+        console.log('%cunlockAllLessons()', 'background: #1e1e1e; color: #4EC9B0; padding: 5px 10px; font-family: monospace; font-size: 14px;');
+        console.log('%cДля возврата блокировки (уроки 4-12):', 'color: #2196F3; font-weight: bold; margin-top: 10px;');
+        console.log('%clockLessons()', 'background: #1e1e1e; color: #4EC9B0; padding: 5px 10px; font-family: monospace; font-size: 14px;');
+        console.log(' ');
+
+        // Initialize the page when DOM is loaded
+        if (document.readyState === 'loading') {
+            // DOM еще не готов, ждем события
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('📄 DOM loaded via event, initializing...');
+                initPage();
+            });
+        } else {
+            // DOM уже готов, запускаем сразу
+            console.log('📄 DOM already ready, initializing immediately...');
+            initPage();
+        }
+        function openImageFullscreen(src) {
+            const overlay = document.getElementById("imageFullscreen");
+            const img = document.getElementById("imageFullscreenImg");
+
+            img.src = src;
+            overlay.style.display = "flex";
+
+            // чтобы кнопка "назад" закрывала
+            history.pushState({ image: true }, "", "");
+        }
+
+        function closeImageFullscreen() {
+            const overlay = document.getElementById("imageFullscreen");
+            overlay.style.display = "none";
+
+            if (history.state?.image) {
+                history.back();
+            }
+        }
+
+        // обработка кнопки "назад"
+        window.addEventListener("popstate", () => {
+            const overlay = document.getElementById("imageFullscreen");
+            if (overlay.style.display === "flex") {
+                overlay.style.display = "none";
+            }
+        });
+
+    </script>
+    <div id="imageFullscreen" class="image-fullscreen" onclick="closeImageFullscreen()">
+        <img id="imageFullscreenImg" src="" alt="Fullscreen image" />
+    </div>
+
+    <script>
+        // Activity Tracking & Auth Check
+        window.addEventListener('DOMContentLoaded', async function () {
+            console.log('🚀 A2 DEMO: Page loading started');
+            
+            const currentUser = localStorage.getItem('currentUser');
+
+            if (!currentUser) {
+                console.log('❌ A2 DEMO: No user session, redirecting to auth');
+                // Not logged in? Redirect to auth with return url
+                window.location.href = `auth.html?redirect=${encodeURIComponent(window.location.pathname.split('/').pop())}`;
+                return;
+            }
+
+            // User is authenticated
+            try {
+                const user = JSON.parse(currentUser);
+                console.log('✅ A2 DEMO: User authenticated:', user.name);
+                
+                // Initialize the page
+                console.log('🎯 A2 DEMO: Calling initPage()');
+                await initPage();
+                console.log('✅ A2 DEMO: Page initialized successfully');
+                
+            } catch (e) {
+                console.error('❌ A2 DEMO: Error during initialization:', e);
+                // Если ошибка парсинга, очищаем и редиректим на auth
+                localStorage.removeItem('currentUser');
+                window.location.href = `auth.html?redirect=${encodeURIComponent(window.location.pathname.split('/').pop())}`;
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+

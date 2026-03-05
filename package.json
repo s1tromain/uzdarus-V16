@@ -1,0 +1,14 @@
+{
+  "name": "uzdarus-platform",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "ensure:developer": "node scripts/ensure-developer.js"
+  },
+  "engines": {
+    "node": "20.x"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.6.0"
+  }
+}

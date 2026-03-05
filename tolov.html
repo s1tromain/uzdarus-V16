@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To'lov - UzdaRus Ta'lim Platformasi</title>
+    <link rel="icon" href="./images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="./images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF9800;
+            --primary-dark: #F57C00;
+            --secondary: #FFD54F;
+            --light: #FFF8E1;
+            --dark: #333;
+            --gray: #666;
+            --light-gray: #f5f5f5;
+            --green: #4CAF50;
+            --gold: #FFD700;
+            --platinum: #E5E4E2;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: 70px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--light);
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 8px 20px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        /* Payment Form Section */
+        .payment-section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        .payment-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Card Details Section */
+        .card-details {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-details::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1%, transparent 20%);
+        }
+
+        .card-details h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .card-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Timer Section */
+        .timer-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #fff3cd;
+            border-radius: 15px;
+            border: 2px solid #ffeaa7;
+        }
+
+        .timer-title {
+            font-size: 1.2rem;
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .timer {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d63031;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            display: inline-block;
+            min-width: 200px;
+        }
+
+        .timer-expired {
+            color: #d63031;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 15px;
+            background: #ffebee;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        /* Screenshot Upload */
+        .screenshot-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #e8f5e9;
+            border-radius: 15px;
+            border: 2px dashed #4CAF50;
+        }
+
+        .screenshot-title {
+            font-size: 1.3rem;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: block;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #4CAF50;
+        }
+
+        .file-label:hover {
+            background: #f1f8e9;
+            transform: translateY(-2px);
+        }
+
+        .file-label i {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .file-text {
+            font-size: 1.1rem;
+            color: #388E3C;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+            word-break: break-all;
+        }
+
+        .preview-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 152, 0, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .submit-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+
+            20% {
+                transform: scale(60, 60);
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(100, 100);
+            }
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FFD54F, #FF9800, #F57C00);
+        }
+
+        .footer-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer p {
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .social-links a:hover {
+            background: white;
+            color: var(--primary-dark);
+            transform: translateY(-3px) rotate(10deg);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 20px;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Redirect Message */
+        .redirect-message {
+            text-align: center;
+            padding: 20px;
+            background: #fff3cd;
+            border-radius: 15px;
+            border: 2px solid #ffeaa7;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            color: #856404;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .card-info {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-container {
+                padding: 25px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .timer {
+                font-size: 2rem;
+                min-width: 180px;
+            }
+
+            body {
+                padding-top: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+
+            .payment-container {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .timer {
+                font-size: 1.8rem;
+                min-width: 160px;
+            }
+
+            .submit-btn {
+                padding: 16px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Form validation styles */
+        .form-group.error input,
+        .form-group.error select {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">UzdaRus</a>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Asosiy sahifaga qaytish
+            </a>
+        </div>
+    </nav>
+
+    <!-- Payment Form Section -->
+    <section class="payment-section">
+        <div class="container">
+            <h2 class="section-title">To'lov ma'lumotlari</h2>
+
+            <!-- Alert Messages -->
+            <div class="alert alert-success" id="successAlert">
+                <i class="fas fa-check-circle"></i> <strong>Muvaffaqiyatli!</strong> Sizning arizangiz qabul qilindi.
+                Tez orada siz bilan bog'lanamiz.
+            </div>
+
+            <div class="alert alert-error" id="errorAlert">
+                <i class="fas fa-exclamation-circle"></i> <strong>Xatolik!</strong> Ma'lumotlarni yuborishda xatolik yuz
+                berdi. Iltimos, qaytadan urinib ko'ring.
+            </div>
+
+            <!-- Redirect Message -->
+            <div class="redirect-message" id="redirectMessage" style="display: none;">
+                <i class="fas fa-hourglass-end"></i> Vaqt tugadi! Siz 10 soniya ichida asosiy sahifaga
+                yo'naltirilasiz...
+            </div>
+
+            <div class="payment-container">
+                <form id="paymentForm">
+                    <!-- Personal Information -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Ism Familiya *</label>
+                            <input type="text" id="name" name="name" placeholder="Ismingiz va familiyangiz" required>
+                            <div class="error-message">Iltimos, ism familiyangizni kiriting</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone"><i class="fas fa-phone"></i> Telefon raqamingiz *</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+998 XX XXX XX XX" required>
+                            <div class="error-message">Iltimos, to'g'ri telefon raqamini kiriting</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Elektron pochta *</label>
+                            <input type="email" id="email" name="email" placeholder="email@example.com" required>
+                            <div class="error-message">Iltimos, to'g'ri email manzilini kiriting</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telegram"><i class="fab fa-telegram"></i> Telegram username *</label>
+                            <input type="text" id="telegram" name="telegram" placeholder="@username" required>
+                            <div class="error-message">Iltimos, Telegram username kiriting</div>
+                        </div>
+                    </div>
+
+                    <!-- Tariff and Course Selection -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tariff"><i class="fas fa-crown"></i> Tarif *</label>
+                            <select id="tariff" name="tariff" required>
+                                <option value="">Tarifni tanlang</option>
+                                <option value="START">START - 780,000 so'm/oy</option>
+                                <option value="GOLD">GOLD - 1,300,000 so'm/oy</option>
+                                <option value="PLATINUM">PLATINUM - 1,900,000 so'm/oy</option>
+                            </select>
+                            <div class="error-message">Iltimos, tarifni tanlang</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course"><i class="fas fa-graduation-cap"></i> Kurs *</label>
+                            <select id="course" name="course" required>
+                                <option value="">Kursni tanlang</option>
+                                <option value="A1-A2">A1-A2 (Boshlang'ich)</option>
+                                <option value="B1-B2">B1-B2 (O'rta)</option>
+                                <option value="C1" id="c1-option" disabled>C1 (Yuqori) - Faqat PLATINUM</option>
+                            </select>
+                            <div class="error-message">Iltimos, kursni tanlang</div>
+                        </div>
+                    </div>
+
+                    <!-- Card Details -->
+                    <div class="card-details">
+                        <h3><i class="fas fa-credit-card"></i> To'lov kartasi ma'lumotlari</h3>
+                        <div class="card-info">
+                            <div class="card-item">
+                                <div class="card-label">Karta raqami</div>
+                                <div class="card-value">5614 6816 2238 3945</div>
+                            </div>
+                            <div class="card-item">
+                                <div class="card-label">Karta egasi</div>
+                                <div class="card-value">SARDORBEK DRIGIN</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px; opacity: 0.9; font-size: 0.95rem; position: relative; z-index: 1;">
+                            <i class="fas fa-info-circle"></i> Iltimos, to'lovni 15 daqiqa ichida amalga oshiring
+                        </p>
+                    </div>
+
+                    <!-- Timer -->
+                    <div class="timer-section">
+                        <div class="timer-title">To'lov uchun qolgan vaqt:</div>
+                        <div class="timer" id="countdown">15:00</div>
+                        <div class="timer-expired" id="expiredMessage" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i> Vaqt tugadi! Siz 10 soniya ichida asosiy
+                            sahifaga yo'naltirilasiz...
+                        </div>
+                    </div>
+
+                    <!-- Screenshot Upload -->
+                    <div class="screenshot-section">
+                        <div class="screenshot-title">
+                            <i class="fas fa-receipt"></i> To'lov cheki skrinshoti
+                        </div>
+                        <input type="file" id="screenshot" name="screenshot" class="file-input" accept="image/*"
+                            required>
+                        <label for="screenshot" class="file-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <div class="file-text">Skrinshotni yuklash uchun bosing</div>
+                            <div class="file-name" id="fileName">Fayl tanlanmagan</div>
+                        </label>
+                        <div class="error-message" id="fileError">Iltimos, to'lov cheki skrinshotini yuklang</div>
+
+                        <div class="preview-container">
+                            <img id="previewImage" class="preview-image" alt="Skrinshot preview">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                        <span class="btn-text"><i class="fas fa-paper-plane"></i> Ma'lumotlarni yuborish</span>
+                        <span class="loading"><i class="fas fa-spinner fa-spin"></i> Yuborilmoqda...</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <h3 style="margin-bottom: 20px;">UzdaRus</h3>
+                <p>Rus tilini o'rganishning eng samarali platformasi. Barcha darajalar uchun professional kurslar.</p>
+
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+
+                <div class="copyright">
+                    <p>© 2025 Barcha huquqlar himoyalangan. Rus tilini oson va samarali o'rganing!</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ТОКЕНЫ УДАЛЕНЫ - теперь они БЕЗОПАСНО хранятся на сервере!
+        
+        // DOM Elements
+        const paymentForm = document.getElementById('paymentForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.querySelector('.btn-text');
+        const loading = document.querySelector('.loading');
+        const countdown = document.getElementById('countdown');
+        const expiredMessage = document.getElementById('expiredMessage');
+        const redirectMessage = document.getElementById('redirectMessage');
+        const tariffSelect = document.getElementById('tariff');
+        const courseSelect = document.getElementById('course');
+        const c1Option = document.getElementById('c1-option');
+        const screenshotInput = document.getElementById('screenshot');
+        const fileName = document.getElementById('fileName');
+        const previewImage = document.getElementById('previewImage');
+        const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
+        const fileError = document.getElementById('fileError');
+
+        // Timer variables
+        let timeLeft = 15 * 60; // 15 minutes in seconds
+        let timerInterval;
+        let isTimerExpired = false;
+
+        // Initialize timer
+        function startTimer() {
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Update timer display
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                countdown.style.display = 'none';
+                expiredMessage.style.display = 'block';
+                redirectMessage.style.display = 'block';
+                submitBtn.disabled = true;
+                isTimerExpired = true;
+
+                // Disable all form inputs
+                const inputs = paymentForm.querySelectorAll('input, select, button');
+                inputs.forEach(input => {
+                    input.disabled = true;
+                    input.style.opacity = '0.5';
+                    input.style.cursor = 'not-allowed';
+                });
+
+                // Redirect to main page after 10 seconds
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 10000);
+
+                return;
+            }
+
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            countdown.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            timeLeft--;
+        }
+
+        // Start timer when page loads
+        startTimer();
+
+        // Tariff selection logic
+        tariffSelect.addEventListener('change', function () {
+            const selectedTariff = this.value;
+
+            // Reset course selection
+            courseSelect.value = '';
+            c1Option.disabled = true;
+
+            // Enable C1 option only for PLATINUM
+            if (selectedTariff === 'PLATINUM') {
+                c1Option.disabled = false;
+            }
+
+            // Update course options based on tariff
+            Array.from(courseSelect.options).forEach(option => {
+                if (option.value === 'C1') return;
+
+                if (selectedTariff === 'PLATINUM') {
+                    option.disabled = true;
+                } else {
+                    option.disabled = false;
+                }
+            });
+
+            validateForm();
+        });
+
+        // File upload handling
+        screenshotInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Fayl hajmi 5MB dan katta bo\'lmasligi kerak!');
+                    this.value = '';
+                    fileName.textContent = 'Fayl tanlanmagan';
+                    return;
+                }
+
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    alert('Faqat rasm fayllari qabul qilinadi!');
+                    this.value = '';
+                    fileName.textContent = 'Fayl tanlanmagan';
+                    return;
+                }
+
+                fileName.textContent = file.name;
+
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+
+                // Hide file error
+                fileError.style.display = 'none';
+            } else {
+                fileName.textContent = 'Fayl tanlanmagan';
+                previewImage.style.display = 'none';
+            }
+
+            validateForm();
+        });
+
+        // Form validation
+        function validateForm() {
+            if (isTimerExpired) {
+                submitBtn.disabled = true;
+                return false;
+            }
+
+            const formData = new FormData(paymentForm);
+            const name = formData.get('name');
+            const phone = formData.get('phone');
+            const email = formData.get('email');
+            const telegram = formData.get('telegram');
+            const tariff = formData.get('tariff');
+            const course = formData.get('course');
+            const screenshot = formData.get('screenshot');
+
+            // Basic validation
+            const isValid = name && phone && email && telegram && tariff && course && screenshot;
+
+            // Enable/disable submit button
+            submitBtn.disabled = !isValid;
+
+            // Validate phone number format
+            const phoneRegex = /^\+998\d{9}$/;
+            const cleanedPhone = phone ? phone.replace(/\D/g, '') : '';
+            const isPhoneValid = cleanedPhone.length === 12 && cleanedPhone.startsWith('998');
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const isEmailValid = email ? emailRegex.test(email) : false;
+
+            // Validate Telegram username
+            const isTelegramValid = telegram ? telegram.startsWith('@') && telegram.length > 1 : false;
+
+            // Update form validation states
+            updateValidationState('name', name);
+            updateValidationState('phone', phone && isPhoneValid);
+            updateValidationState('email', email && isEmailValid);
+            updateValidationState('telegram', telegram && isTelegramValid);
+            updateValidationState('tariff', tariff);
+            updateValidationState('course', course);
+
+            // Show file error if no file selected
+            if (!screenshot) {
+                fileError.style.display = 'block';
+            } else {
+                fileError.style.display = 'none';
+            }
+
+            return isValid && isPhoneValid && isEmailValid && isTelegramValid;
+        }
+
+        // Update validation state for a field
+        function updateValidationState(fieldId, isValid) {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
+
+            const formGroup = field.closest('.form-group');
+
+            if (isValid) {
+                formGroup.classList.remove('error');
+            } else {
+                formGroup.classList.add('error');
+            }
+        }
+
+        // Real-time validation
+        paymentForm.addEventListener('input', function (e) {
+            if (e.target.id !== 'screenshot') {
+                validateForm();
+            }
+        });
+
+        paymentForm.addEventListener('change', validateForm);
+
+        // Phone number formatting
+        document.getElementById('phone').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+
+            if (value.length > 0) {
+                if (!value.startsWith('998')) {
+                    value = '998' + value;
+                }
+
+                if (value.length > 12) {
+                    value = value.substring(0, 12);
+                }
+
+                e.target.value = '+' + value;
+            }
+
+            validateForm();
+        });
+
+        // Telegram username formatting
+        document.getElementById('telegram').addEventListener('input', function (e) {
+            let value = e.target.value;
+
+            if (value.length > 0 && !value.startsWith('@')) {
+                e.target.value = '@' + value.replace('@', '');
+            }
+
+            validateForm();
+        });
+
+        // БЕЗОПАСНАЯ отправка данных через API
+        async function sendToTelegram(formData) {
+            const name = formData.get('name');
+            const phone = formData.get('phone');
+            const email = formData.get('email');
+            const telegram = formData.get('telegram');
+            const tariff = formData.get('tariff');
+            const course = formData.get('course');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/send-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name,
+                        phone,
+                        email,
+                        telegram,
+                        tariff,
+                        course
+                    })
+                });
+
+                const result = await response.json();
+                return result.success;
+            } catch (error) {
+                console.error('API error:', error);
+                return false;
+            }
+        }
+
+        // Get tariff price
+        function getTariffPrice(tariff) {
+            switch (tariff) {
+                case 'START': return '780,000 so\'m';
+                case 'GOLD': return '1,300,000 so\'m';
+                case 'PLATINUM': return '1,900,000 so\'m';
+                default: return 'Noma\'lum';
+            }
+        }
+
+        // Form submission handler
+        paymentForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            if (isTimerExpired) {
+                alert('Vaqt tugadi! Iltimos, yangi to\'lov formasini oching.');
+                return;
+            }
+
+            if (!validateForm()) {
+                alert('Iltimos, barcha maydonlarni to\'g\'ri to\'ldiring!');
+                return;
+            }
+
+            const formData = new FormData(this);
+
+            // Show loading state
+            btnText.style.display = 'none';
+            loading.style.display = 'block';
+            submitBtn.disabled = true;
+
+            try {
+                // Send to Telegram
+                const sent = await sendToTelegram(formData);
+
+                if (sent) {
+                    successAlert.style.display = 'block';
+                    errorAlert.style.display = 'none';
+
+                    // Reset form after 3 seconds
+                    setTimeout(() => {
+                        paymentForm.reset();
+                        fileName.textContent = 'Fayl tanlanmagan';
+                        previewImage.style.display = 'none';
+                        successAlert.style.display = 'none';
+                        validateForm();
+
+                        // Reset course options
+                        Array.from(courseSelect.options).forEach(option => {
+                            if (option.value !== 'C1') {
+                                option.disabled = false;
+                            }
+                        });
+                        c1Option.disabled = true;
+                    }, 3000);
+
+                } else {
+                    errorAlert.style.display = 'block';
+                    successAlert.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Form yuborish xatosi:', error);
+                errorAlert.style.display = 'block';
+                successAlert.style.display = 'none';
+            } finally {
+                // Hide loading state
+                btnText.style.display = 'block';
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+                validateForm();
+            }
+        });
+
+        // Initialize form validation on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            validateForm();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>B2 Lug'at - UzdaRus</title>
+    <link rel="icon" href="../images/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="../images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="pro-toast.css">
+    <link rel="stylesheet" href="pro-ui.css">
+    <script defer src="pro-toast.js"></script>
+    <script type="module" src="paid-platform.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF9800;
+            --primary-dark: #F57C00;
+            --secondary: #FFD54F;
+            --light: #FFF8E1;
+            --dark: #333;
+            --gray: #666;
+            --success: #4CAF50;
+            --error: #F44336;
+            --blue: #2196F3;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .floating-particle {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            opacity: 0.12;
+            animation: float linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        .topic-selection,
+        .flashcard-screen,
+        .completion-screen {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+        }
+
+        .loading-subtitle {
+            font-size: 1.5rem;
+            color: white;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin-loader 1s linear infinite;
+        }
+
+        @keyframes spin-loader {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Topic Selection Screen */
+        .topic-selection {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            transition: opacity 0.3s ease;
+        }
+
+        .topic-selection.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .vocab-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .vocab-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .back-to-course {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-to-course:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        .back-to-course-text {
+            display: inline;
+        }
+
+        .topics-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 20px;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .topic-card.locked {
+            opacity: 0.8;
+            cursor: not-allowed;
+            position: relative;
+            overflow: visible;
+            min-height: 200px;
+        }
+
+        .topic-card.locked:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .topic-card.locked::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 165, 0, 0.08));
+            pointer-events: none;
+            border-radius: 15px;
+        }
+
+        .topic-number {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .topic-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .topic-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .topic-description {
+            color: var(--gray);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .topic-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .words-count {
+            color: var(--primary-dark);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .progress-badge {
+            background: linear-gradient(135deg, var(--success), #45a049);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .locked-badge {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 700;
+            text-align: center;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        /* Flashcard Screen */
+        .flashcard-screen {
+            position: fixed;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+        }
+
+        .flashcard-screen.active {
+            display: flex;
+        }
+
+        .flashcard-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-flashcard {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-flashcard:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .progress-indicator {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .flashcard-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            gap: 30px;
+        }
+
+        .flashcard {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, #4CAF50, #388E3C);
+            transform: rotateY(180deg);
+        }
+
+        .word-russian,
+        .word-uzbek {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: white;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .hint-text {
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .audio-button {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .audio-button:hover {
+            background: white;
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .flashcard-controls {
+            display: flex;
+            gap: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .control-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .control-btn:hover {
+            background: white;
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .control-btn.primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .control-btn.primary:hover {
+            background: var(--secondary);
+            color: var(--primary-dark);
+        }
+
+        /* Completion Screen */
+        .completion-screen {
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            padding: 20px;
+        }
+
+        .completion-screen.active {
+            display: flex;
+        }
+
+        .completion-content {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .completion-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .completion-message {
+            font-size: 1.3rem;
+            color: var(--gray);
+            margin-bottom: 40px;
+        }
+
+        .completion-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .completion-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .completion-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .back-to-course {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0;
+            }
+
+            .back-to-course-text {
+                display: none;
+            }
+
+            .back-to-course i {
+                margin: 0;
+            }
+
+            .vocab-title {
+                font-size: 1.5rem;
+                padding: 0 60px;
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 0 15px;
+            }
+
+            .topic-card {
+                padding: 20px;
+                min-height: auto;
+            }
+
+            .topic-number {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .topic-icon {
+                font-size: 2.5rem;
+            }
+
+            .topic-name {
+                font-size: 1.3rem;
+            }
+
+            .topic-description {
+                font-size: 0.9rem;
+            }
+
+            .locked-badge {
+                font-size: 0.95rem;
+                padding: 10px 20px;
+            }
+
+            .flashcard {
+                max-width: 100%;
+                height: 300px;
+            }
+
+            .word-russian {
+                font-size: 2rem;
+            }
+
+            .word-uzbek {
+                font-size: 1.8rem;
+            }
+
+            .audio-controls {
+                flex-direction: column;
+                gap: 10px;
+                max-width: 100%;
+                padding: 0 20px;
+            }
+
+            .audio-button {
+                width: 100%;
+                padding: 12px 25px;
+                font-size: 1rem;
+                justify-content: center;
+            }
+
+            .flashcard-controls {
+                flex-direction: column;
+                width: 100%;
+                max-width: 100%;
+                gap: 10px;
+                padding: 0 20px;
+                align-items: center;
+            }
+
+            .control-btn {
+                width: 100%;
+                max-width: 400px;
+                justify-content: center;
+                padding: 12px 30px;
+            }
+
+            .hint-text {
+                padding: 0 20px;
+            }
+
+            .completion-title {
+                font-size: 2rem;
+            }
+
+            .completion-message {
+                font-size: 1.2rem;
+            }
+
+            .completion-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation" id="backgroundAnimation"></div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">B2 Lug'at</div>
+        <div class="loading-subtitle">Yuklanmoqda...</div>
+        <div class="pro-loading-note">
+            <span class="pro-loading-badge">UZDARUS PRO</span>
+            <span class="pro-loading-text">PRO versiya yuklanmoqda…</span>
+        </div>
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Topic Selection Screen -->
+    <div class="topic-selection" id="topicSelection">
+        <div class="vocab-header">
+            <a href="b2-course.html" class="back-to-course">
+                <i class="fas fa-arrow-left"></i>
+                <span class="back-to-course-text">Kursga qaytish</span>
+            </a>
+            <h1 class="vocab-title">B2 - So'zlar Lug'ati</h1>
+        </div>
+        <div class="topics-container">
+            <div class="topics-grid" id="topicsGrid"></div>
+        </div>
+    </div>
+
+    <!-- Flashcard Screen -->
+    <div class="flashcard-screen" id="flashcardScreen">
+        <div class="flashcard-header">
+            <button class="close-flashcard" onclick="closeFlashcards()">
+                <i class="fas fa-times"></i> Yopish
+            </button>
+            <div class="progress-indicator" id="progressIndicator">1 / 50</div>
+        </div>
+        <div class="flashcard-container">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <div class="word-russian" id="wordRussian">смысл жизни</div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="word-uzbek" id="wordUzbek">hayotning ma'nosi</div>
+                    </div>
+                </div>
+            </div>
+            <p class="hint-text">💡 Kartochkani bosing va tarjimani ko'ring</p>
+            <div class="audio-controls">
+                <button class="audio-button" onclick="playAudio(event)">
+                    <i class="fas fa-volume-up"></i> Tinglash
+                </button>
+                <button class="audio-button" onclick="checkPronunciation(event)">
+                    <i class="fas fa-microphone"></i> Talaffuz
+                </button>
+            </div>
+            <div class="flashcard-controls">
+                <button class="control-btn" onclick="previousCard()">
+                    <i class="fas fa-arrow-left"></i> Oldingi
+                </button>
+                <button class="control-btn primary" onclick="nextCard()">
+                    Keyingi <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Screen -->
+    <div class="completion-screen" id="completionScreen">
+        <div class="completion-content">
+            <div class="completion-icon">🎉</div>
+            <h2 class="completion-title">Tabriklaymiz!</h2>
+            <p class="completion-message" id="completionMessage">Siz barcha so'zlarni ko'rib chiqdingiz!</p>
+            <div class="completion-buttons">
+                <button class="completion-btn" onclick="restartTopic()">
+                    <i class="fas fa-redo"></i> Qayta boshlash
+                </button>
+                <button class="completion-btn" onclick="backToTopics()">
+                    <i class="fas fa-list"></i> Mavzularga qaytish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== VOCABULARY DATA ====================
+        const vocabularyData = {
+            topics: [
+                {
+                    id: 1,
+                    name: "Shaxsiy qarashlar va hayotiy pozitsiya",
+                    description: "Murakkab ergash gaplar, sabab-natija, qadriyatlar",
+                    icon: "🤔",
+                    isLocked: false,
+                    words: [
+                        { ru: "смысл жизни", uz: "hayotning ma'nosi" },
+                        { ru: "выбор ценностей", uz: "qadriyatlarni tanlash" },
+                        { ru: "жизненная позиция", uz: "hayotiy pozitsiya" },
+                        { ru: "принципы", uz: "prinsiplar" },
+                        { ru: "убеждения", uz: "e'tiqodlar" },
+                        { ru: "мировоззрение", uz: "dunyo qarashi" },
+                        { ru: "совесть", uz: "vijdon" },
+                        { ru: "честность", uz: "halollik" },
+                        { ru: "справедливость", uz: "adolat" },
+                        { ru: "так как", uz: "chunki (sabab)" },
+                        { ru: "поэтому", uz: "shuning uchun" },
+                        { ru: "благодаря тому, что", uz: "tufayli" },
+                        { ru: "в результате", uz: "natijada" },
+                        { ru: "следовательно", uz: "demak" },
+                        { ru: "дело в том, что", uz: "gap shundaki" },
+                        { ru: "личность", uz: "shaxsiyat" },
+                        { ru: "характер", uz: "xarakter" },
+                        { ru: "достоинство", uz: "qadr-qimmat" },
+                        { ru: "самоуважение", uz: "o'z-o'zini hurmat qilish" },
+                        { ru: "самосознание", uz: "o'zini anglash" },
+                        { ru: "ответственность", uz: "mas'uliyat" },
+                        { ru: "свобода выбора", uz: "tanlov erkinligi" },
+                        { ru: "нравственность", uz: "axloq" },
+                        { ru: "мораль", uz: "moral" },
+                        { ru: "этика", uz: "etika" },
+                        { ru: "ценности", uz: "qadriyatlar" },
+                        { ru: "идеалы", uz: "ideallar" },
+                        { ru: "убеждать", uz: "ishontirmoq" },
+                        { ru: "сомневаться", uz: "shubhalanmoq" },
+                        { ru: "уверенность", uz: "ishonch" },
+                        { ru: "сомнение", uz: "shubha" },
+                        { ru: "критическое мышление", uz: "tanqidiy fikrlash" },
+                        { ru: "рассуждать", uz: "mulohaza yuritmoq" },
+                        { ru: "анализировать", uz: "tahlil qilmoq" },
+                        { ru: "оценивать", uz: "baholamoq" },
+                        { ru: "точка зрения", uz: "nuqtai nazar" },
+                        { ru: "взгляд на жизнь", uz: "hayotga qarash" },
+                        { ru: "жизненный опыт", uz: "hayotiy tajriba" },
+                        { ru: "мудрость", uz: "donolik" },
+                        { ru: "зрелость", uz: "kamolot" },
+                        { ru: "самостоятельность", uz: "mustaqillik" },
+                        { ru: "независимость", uz: "qaram emas bo'lish" },
+                        { ru: "индивидуальность", uz: "individual xususiyat" },
+                        { ru: "уникальность", uz: "noyoblik" },
+                        { ru: "особенность", uz: "o'ziga xoslik" },
+                        { ru: "отличаться", uz: "farq qilmoq" },
+                        { ru: "выделяться", uz: "ajralib turmoq" },
+                        { ru: "стремиться", uz: "intilmoq" },
+                        { ru: "добиваться", uz: "erishmoq" },
+                        { ru: "достигать цели", uz: "maqsadga yetmoq" }
+                    ]
+                },
+
+                {
+                    id: 2,
+                    name: "Ta'lim tizimi va kasbiy rivojlanish",
+                    description: "Страдательный залог, ta'lim, malaka oshirish",
+                    icon: "🎓",
+                    isLocked: false,
+                    words: [
+                        { ru: "образование", uz: "ta'lim" },
+                        { ru: "получать образование", uz: "ta'lim olish" },
+                        { ru: "система образования", uz: "ta'lim tizimi" },
+                        { ru: "качество образования", uz: "ta'lim sifati" },
+                        { ru: "повышать квалификацию", uz: "malakani oshirish" },
+                        { ru: "квалификация", uz: "malaka" },
+                        { ru: "профессиональное развитие", uz: "kasbiy rivojlanish" },
+                        { ru: "заниматься развитием", uz: "rivojlanish bilan shug'ullanish" },
+                        { ru: "сдавать экзамен", uz: "imtihon topshirmoq" },
+                        { ru: "экзамен сдаётся", uz: "imtihon topshiriladi (passiv)" },
+                        { ru: "оценивать работу", uz: "ishni baholamoq" },
+                        { ru: "работа оценивается", uz: "ish baholanadi (passiv)" },
+                        { ru: "преподаватель", uz: "o'qituvchi" },
+                        { ru: "студент", uz: "talaba" },
+                        { ru: "учащийся", uz: "o'quvchi" },
+                        { ru: "слушатель курсов", uz: "kurs tinglovchisi" },
+                        { ru: "учебное заведение", uz: "o'quv muassasasi" },
+                        { ru: "высшее образование", uz: "oliy ta'lim" },
+                        { ru: "среднее образование", uz: "o'rta ta'lim" },
+                        { ru: "дополнительное образование", uz: "qo'shimcha ta'lim" },
+                        { ru: "курсы повышения", uz: "malaka oshirish kurslari" },
+                        { ru: "тренинг", uz: "trening" },
+                        { ru: "семинар", uz: "seminar" },
+                        { ru: "лекция", uz: "ma'ruza" },
+                        { ru: "практика", uz: "amaliyot" },
+                        { ru: "стажировка", uz: "stajirovka" },
+                        { ru: "диплом", uz: "diplom" },
+                        { ru: "сертификат", uz: "sertifikat" },
+                        { ru: "аттестат", uz: "attestat" },
+                        { ru: "степень", uz: "daraja" },
+                        { ru: "магистр", uz: "magistr" },
+                        { ru: "бакалавр", uz: "bakalavr" },
+                        { ru: "доктор наук", uz: "fan doktori" },
+                        { ru: "кандидат наук", uz: "fan nomzodi" },
+                        { ru: "специальность", uz: "mutaxassislik" },
+                        { ru: "специализация", uz: "ixtisoslashuv" },
+                        { ru: "навыки", uz: "ko'nikmalar" },
+                        { ru: "умения", uz: "malakalar" },
+                        { ru: "знания", uz: "bilimlar" },
+                        { ru: "компетенция", uz: "kompetentsiya" },
+                        { ru: "опыт работы", uz: "ish tajribasi" },
+                        { ru: "профессионализм", uz: "professionallik" },
+                        { ru: "квалифицированный", uz: "malakali" },
+                        { ru: "опытный", uz: "tajribali" },
+                        { ru: "грамотный", uz: "savodli" },
+                        { ru: "образованный", uz: "ma'lumotli" },
+                        { ru: "развиваться", uz: "rivojlanmoq" },
+                        { ru: "совершенствоваться", uz: "takomillashmoq" },
+                        { ru: "осваивать", uz: "o'zlashtirishmoq" },
+                        { ru: "изучать", uz: "o'rganmoq" }
+                    ]
+                },
+
+                {
+                    id: 3,
+                    name: "Ish bozori va professional muhit",
+                    description: "Rasmiy uslub, ish bozori, martaba",
+                    icon: "💼",
+                    isLocked: false,
+                    words: [
+                        { ru: "рынок труда", uz: "mehnat bozori" },
+                        { ru: "требования работодателей", uz: "ish beruvchilarning talablari" },
+                        { ru: "говорить о профессии", uz: "kasb haqida gapirish" },
+                        { ru: "карьера", uz: "martaba" },
+                        { ru: "карьерный рост", uz: "martaba o'sishi" },
+                        { ru: "в связи с", uz: "bilan bog'liq" },
+                        { ru: "согласно", uz: "asosan, ko'ra" },
+                        { ru: "в соответствии с", uz: "muvofiq" },
+                        { ru: "работодатель", uz: "ish beruvchi" },
+                        { ru: "сотрудник", uz: "xodim" },
+                        { ru: "специалист", uz: "mutaxassis" },
+                        { ru: "профессионал", uz: "professional" },
+                        { ru: "вакансия", uz: "bo'sh ish o'rni" },
+                        { ru: "резюме", uz: "rezyume" },
+                        { ru: "собеседование", uz: "suhbat" },
+                        { ru: "кандидат", uz: "nomzod" },
+                        { ru: "должность", uz: "lavozim" },
+                        { ru: "руководитель", uz: "rahbar" },
+                        { ru: "менеджер", uz: "menejer" },
+                        { ru: "директор", uz: "direktor" },
+                        { ru: "зарплата", uz: "ish haqi" },
+                        { ru: "оклад", uz: "oylik maosh" },
+                        { ru: "премия", uz: "mukofot" },
+                        { ru: "бонус", uz: "bonus" },
+                        { ru: "повышение", uz: "ko'tarilish" },
+                        { ru: "понижение", uz: "tushish" },
+                        { ru: "увольнение", uz: "ishdan bo'shatish" },
+                        { ru: "прием на работу", uz: "ishga qabul qilish" },
+                        { ru: "трудовой договор", uz: "mehnat shartnomasi" },
+                        { ru: "контракт", uz: "kontrakt" },
+                        { ru: "испытательный срок", uz: "sinov muddati" },
+                        { ru: "график работы", uz: "ish jadvali" },
+                        { ru: "рабочее время", uz: "ish vaqti" },
+                        { ru: "отпуск", uz: "ta'til" },
+                        { ru: "больничный", uz: "kasallik ta'tili" },
+                        { ru: "командировка", uz: "xizmat safari" },
+                        { ru: "офис", uz: "ofis" },
+                        { ru: "рабочее место", uz: "ish joyi" },
+                        { ru: "коллектив", uz: "jamoa" },
+                        { ru: "команда", uz: "komanda" },
+                        { ru: "коллега", uz: "hamkasb" },
+                        { ru: "начальник", uz: "boshliq" },
+                        { ru: "подчинённый", uz: "bo'ysunuvchi" },
+                        { ru: "обязанности", uz: "majburiyatlar" },
+                        { ru: "ответственность", uz: "mas'uliyat" },
+                        { ru: "полномочия", uz: "vakolatlar" },
+                        { ru: "компетенция", uz: "kompetentsiya" },
+                        { ru: "профессиональные качества", uz: "kasbiy fazilatlar" },
+                        { ru: "деловые качества", uz: "biznes fazilatlari" },
+                        { ru: "конкурентоспособность", uz: "raqobatbardoshlik" }
+                    ]
+                },
+
+                // Locked topics (4-16)
+                ...generateLockedTopics(4)
+            ]
+        };
+
+        function generateLockedTopics(startId) {
+            const lockedTopicNames = [
+                "Muvaffaqiyat va muvaffaqiyatsizlik",
+                "Zamonaviy jamiyat muammolari",
+                "Texnologiya va inson",
+                "Ommaviy axborot va manipulyatsiya",
+                "Madaniyatlararo muloqot",
+                "Axloq, mas'uliyat va tanlov",
+                "Sog'lom jamiyat va hayot sifati",
+                "Iqtisod, pul va iste'mol madaniyati",
+                "Qonun, huquq va erkinlik",
+                "Ekologiya va barqaror rivojlanish",
+                "Psixologiya va shaxs rivoji",
+                "Globalizatsiya va kelajak",
+                "Bahs, muzokara va ommaviy nutq"
+            ];
+
+            const icons = ["🏆", "🌐", "💻", "📰", "🌍", "⚖️", "💚", "💰", "📜", "🌱", "🧠", "🚀", "🗣️"];
+
+            return lockedTopicNames.map((name, index) => ({
+                id: startId + index,
+                name: name,
+                description: "Qo'shimcha mavzu",
+                icon: icons[index] || "🔒",
+                isLocked: false,
+                words: []
+            }));
+        }
+
+        // ==================== STATE MANAGEMENT ====================
+        let currentTopicId = null;
+        let currentCardIndex = 0;
+        let currentWords = [];
+        let isFlipped = false;
+        let learnedWords = {};
+
+        // ==================== INITIALIZATION ====================
+        window.addEventListener('DOMContentLoaded', () => {
+            createBackgroundParticles();
+            loadProgress();
+            renderTopics();
+            
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 1000);
+        });
+
+        function createBackgroundParticles() {
+            const background = document.getElementById('backgroundAnimation');
+            const icons = ['📚', '✏️', '📖', '🎓', '💡', '⭐', '🌟', '✨'];
+            
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                particle.textContent = icons[Math.floor(Math.random() * icons.length)];
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                background.appendChild(particle);
+            }
+        }
+
+        function getProgressStorageKey() {
+            try {
+                const userSession = localStorage.getItem('currentUser');
+                if (userSession) {
+                    const user = JSON.parse(userSession);
+                    if (user && user.id) {
+                        return `b2_vocabulary_progress_${user.id}`;
+                    }
+                }
+            } catch (error) {
+                console.log('Progress key fallback:', error);
+            }
+
+            return 'b2_vocabulary_progress_guest';
+        }
+
+        function clampProgressValue(value, total) {
+            const max = Math.max(0, total || 0);
+            const numeric = Number(value);
+            if (!Number.isFinite(numeric)) return 0;
+            return Math.min(max, Math.max(0, Math.round(numeric)));
+        }
+
+        function getTopicProgress(topic) {
+            const total = topic.words.length || 0;
+            const learned = clampProgressValue(learnedWords[`topic_${topic.id}`] || 0, total);
+            const percentage = total > 0
+                ? Math.min(100, Math.max(0, Math.round((learned / total) * 100)))
+                : 0;
+
+            return { total, learned, percentage };
+        }
+
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem(getProgressStorageKey());
+                const parsed = saved ? JSON.parse(saved) : {};
+                learnedWords = parsed && typeof parsed === 'object' ? parsed : {};
+            } catch (error) {
+                console.log('Load progress error:', error);
+                learnedWords = {};
+            }
+        }
+
+        function saveProgress() {
+            try {
+                const topic = vocabularyData.topics.find(t => t.id === currentTopicId);
+                if (topic) {
+                    const total = topic.words.length || 0;
+                    const safeCurrent = clampProgressValue(currentCardIndex + 1, total);
+                    const previous = clampProgressValue(learnedWords[`topic_${currentTopicId}`] || 0, total);
+                    learnedWords[`topic_${currentTopicId}`] = Math.max(previous, safeCurrent);
+                }
+
+                localStorage.setItem(getProgressStorageKey(), JSON.stringify(learnedWords));
+            } catch (error) {
+                console.log('Save progress error:', error);
+            }
+        }
+
+        function renderTopics() {
+            const grid = document.getElementById('topicsGrid');
+            grid.innerHTML = '';
+
+            vocabularyData.topics.forEach(topic => {
+                const { total, percentage } = getTopicProgress(topic);
+                const card = document.createElement('div');
+                card.className = `topic-card ${topic.isLocked ? 'locked' : ''}`;
+                
+                card.innerHTML = `
+                    <div class="topic-number">${topic.id}</div>
+                    <div class="topic-icon">${topic.icon}</div>
+                    <div class="topic-name">${topic.name}</div>
+                    <div class="topic-description">${topic.description}</div>
+                    <div class="topic-stats">
+                        <div class="words-count">
+                            <i class="fas fa-book"></i>
+                            ${total} ta so'z
+                        </div>
+                        <span class="progress-badge">${percentage}%</span>
+                    </div>
+                    ${topic.isLocked ? '<div class="locked-badge"><i class="fas fa-book-open"></i> Ochiq</div>' : ''}
+                `;
+
+                if (!topic.isLocked) {
+                    card.addEventListener('click', () => openTopic(topic.id));
+                    card.style.cursor = 'pointer';
+                } else {
+                    card.addEventListener('click', () => {
+                        alert('Mavzu ochiq.');
+                    });
+                }
+
+                grid.appendChild(card);
+            });
+        }
+
+        function openTopic(topicId) {
+            const topic = vocabularyData.topics.find(t => t.id === topicId);
+            if (!topic || topic.words.length === 0) return;
+
+            currentTopicId = topicId;
+            currentWords = [...topic.words];
+            currentCardIndex = 0;
+            isFlipped = false;
+
+            document.getElementById('topicSelection').classList.add('hidden');
+            document.getElementById('flashcardScreen').classList.add('active');
+            
+            updateCard();
+        }
+
+        function updateCard() {
+            if (currentCardIndex >= currentWords.length) {
+                showCompletionScreen();
+                return;
+            }
+
+            const word = currentWords[currentCardIndex];
+            document.getElementById('wordRussian').textContent = word.ru;
+            document.getElementById('wordUzbek').textContent = word.uz;
+            document.getElementById('progressIndicator').textContent = 
+                `${currentCardIndex + 1} / ${currentWords.length}`;
+
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.remove('flipped');
+            isFlipped = false;
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        function nextCard() {
+            currentCardIndex++;
+            saveProgress();
+            updateCard();
+        }
+
+        function previousCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateCard();
+            }
+        }
+
+        function playAudio(event) {
+            event.stopPropagation();
+            const word = currentWords[currentCardIndex];
+            const utterance = new SpeechSynthesisUtterance(word.ru);
+            utterance.lang = 'ru-RU';
+            speechSynthesis.speak(utterance);
+        }
+
+        function checkPronunciation(event) {
+            event.stopPropagation();
+            alert('Talaffuz tekshirish funksiyasi tez orada!');
+        }
+
+        function closeFlashcards() {
+            saveProgress();
+            document.getElementById('flashcardScreen').classList.remove('active');
+            document.getElementById('topicSelection').classList.remove('hidden');
+            currentTopicId = null;
+            currentCardIndex = 0;
+            currentWords = [];
+            renderTopics();
+        }
+
+        function showCompletionScreen() {
+            saveProgress();
+            document.getElementById('flashcardScreen').classList.remove('active');
+            document.getElementById('completionScreen').classList.add('active');
+            
+            const topic = vocabularyData.topics.find(t => t.id === currentTopicId);
+            document.getElementById('completionMessage').textContent = 
+                `Siz "${topic.name}" mavzusidagi barcha so'zlarni ko'rib chiqdingiz!`;
+        }
+
+        function restartTopic() {
+            currentCardIndex = 0;
+            document.getElementById('completionScreen').classList.remove('active');
+            document.getElementById('flashcardScreen').classList.add('active');
+            updateCard();
+        }
+
+        function backToTopics() {
+            saveProgress();
+            document.getElementById('completionScreen').classList.remove('active');
+            document.getElementById('topicSelection').classList.remove('hidden');
+            currentTopicId = null;
+            currentCardIndex = 0;
+            currentWords = [];
+            renderTopics();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UZDARUS PRO | Kirish</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body data-page="login">
+    <main class="cabinet-shell">
+        <header class="cabinet-header">
+            <h1>UZDARUS PRO kabineti</h1>
+            <p>Login va vaqtinchalik parol orqali tizimga kiring</p>
+        </header>
+
+        <section class="cabinet-body">
+            <div class="notice error" id="loginError"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Login</label>
+                    <input id="username" name="username" placeholder="Masalan: ali.valiyev" autocomplete="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Vaqtinchalik parol</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+                </div>
+
+                <button class="btn" id="loginBtn" type="submit">Kirish</button>
+            </form>
+        </section>
+    </main>
+
+    <script type="module" src="./cabinet.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function hasUserProfile() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function userRole() {
+      return hasUserProfile()
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
+        : "customer";
+    }
+
+    function isStaff() {
+      return userRole() in ["moderator", "admin", "developer"];
+    }
+
+    function ownerMutableKeys() {
+      return [
+        "courses",
+        "lastActivity",
+        "completedTopics",
+        "forcePasswordChange",
+        "lastPasswordChangeAt",
+        "updatedAt"
+      ];
+    }
+
+    function ownerUpdateAllowed() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(ownerMutableKeys());
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isStaff();
+      allow create: if false;
+      allow delete: if false;
+      allow update: if isOwner(userId) && ownerUpdateAllowed();
+
+      match /quizResults/{resultId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /{document=**} {
+        allow read, write: if false;
+      }
+    }
+
+    match /activityLogs/{logId} {
+      allow create: if isSignedIn() &&
+        request.resource.data.userEmail is string &&
+        request.resource.data.action is string;
+      allow read: if isStaff();
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
